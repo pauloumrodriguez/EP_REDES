@@ -20,5 +20,10 @@
 			<type>1</type>
 			<location>C:/Users/Usuario/Downloads/eagle-logo.png</location>
 		</link>
+		<link>
+			<name>src/icons/seta-left-icon.png</name>
+			<type>1</type>
+			<location>C:/Users/Usuario/Downloads/seta-left-icon.png</location>
+		</link>
 	</linkedResources>
 </projectDescription>

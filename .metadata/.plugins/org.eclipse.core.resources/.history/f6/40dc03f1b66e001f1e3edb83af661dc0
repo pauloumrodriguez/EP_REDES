@@ -11,7 +11,7 @@ public class JLogin extends JFrame {
     private JPasswordField passwordField;
 
     public JLogin(String title) {
-        super(title);
+        super("Login");
 
         // Configurações da janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,9 +84,7 @@ public class JLogin extends JFrame {
         // Evento de clique no "Esqueci minha senha"
         forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                dispose();
-            	JLogin forgot = new ForgotScreen("Forgot Password");
-            	forgot.setVisible(true);
+                JOptionPane.showMessageDialog(null, "Redirecionando para recuperação de senha...");
             }
 
             public void mouseEntered(java.awt.event.MouseEvent e) {
@@ -122,7 +120,7 @@ public class JLogin extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            JLogin frame = new JLogin("Login");
+            JLogin frame = new JLogin();
             frame.setVisible(true);
         });
     }

@@ -84,9 +84,7 @@ public class JLogin extends JFrame {
         // Evento de clique no "Esqueci minha senha"
         forgotPasswordLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                dispose();
-            	JLogin forgot = new ForgotScreen("Forgot Password");
-            	forgot.setVisible(true);
+                JLogin forgot = new ForgotScreen("Forgot Password");
             }
 
             public void mouseEntered(java.awt.event.MouseEvent e) {
