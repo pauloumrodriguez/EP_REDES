@@ -1,0 +1,72 @@
+package Basic;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class teste {
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Tela de Login");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(350, 200);
+        frame.setLayout(new GridBagLayout()); // Usando GridBagLayout para organizar os componentes
+        
+        // Criando os componentes
+        JLabel usuarioLabel = new JLabel("Usuário:");
+        JTextField usuarioField = new JTextField(15);
+        JLabel senhaLabel = new JLabel("Senha:");
+        JPasswordField senhaField = new JPasswordField(15);
+        JButton loginButton = new JButton("Login");
+        JLabel statusLabel = new JLabel(""); // Para exibir status de login
+
+        // Configuração do layout com GridBagConstraints
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Espaçamento entre componentes
+
+        // Adicionando os componentes à janela
+        gbc.gridx = 0; gbc.gridy = 0;
+        frame.add(usuarioLabel, gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0;
+        frame.add(usuarioField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        frame.add(senhaLabel, gbc);
+
+        gbc.gridx = 1; gbc.gridy = 1;
+        frame.add(senhaField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        frame.add(loginButton, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        frame.add(statusLabel, gbc);
+
+        // Ação ao clicar no botão de login
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String usuario = usuarioField.getText();
+                String senha = new String(senhaField.getPassword());
+
+                // Validação simples do login (usuário: admin, senha: 1234)
+                if (usuario.equals("admin") && senha.equals("1234")) {
+                    statusLabel.setText("Login bem-sucedido!");
+                    statusLabel.setForeground(Color.GREEN);
+                } else {
+                    statusLabel.setText("Usuário ou senha inválidos.");
+                    statusLabel.setForeground(Color.RED);
+                }
+            }
+        });
+
+        // Exibir a janela
+        frame.setVisible(true);
+	}
+}

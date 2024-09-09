@@ -1,0 +1,4 @@
+INDEX VERSION 1.134+C:\Users\Usuario\Documents\USP\4_SEMESTRE\REDES\EP\.metadata\.plugins\org.eclipse.jdt.core
+4219279280.index
+3413270776.index
+1865797976.index
