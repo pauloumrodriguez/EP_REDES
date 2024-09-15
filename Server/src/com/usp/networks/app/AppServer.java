@@ -1,13 +1,12 @@
 package com.usp.networks.app;
 
-import java.sql.*;
-import com.usp.networks.server.*;
+//import java.sql.*;
+//import com.usp.networks.server.*;
 
 public class AppServer {
 	public static void main(String[] args) {
-		Server server = Server.getServer();
-		try {
-			String query = "SELECT * FROM Users;";
+		//Server server = Server.getServer();
+		/*try {
 			ResultSet rs = server.executeQuery(query);
 			while(rs.next()) {
 				String name = rs.getString("fname");
@@ -17,6 +16,6 @@ public class AppServer {
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 }
