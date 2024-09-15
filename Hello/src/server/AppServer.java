@@ -15,7 +15,7 @@ public class AppServer {
 			}
 		}
 		catch(SQLException e) {
-			e.getMessage();
+			e.printStackTrace();
 		}
 	}
 }

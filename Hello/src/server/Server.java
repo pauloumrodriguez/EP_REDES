@@ -27,7 +27,7 @@ public class Server {
 	}
 	
 	private Connection connect() throws SQLException {
-		String url = "jdbc:sqlite:/server/myDB.db";
+		String url = "jdbc:sqlite:src/server/myDB.db";
 		return DriverManager.getConnection(url);
 	}
 	
