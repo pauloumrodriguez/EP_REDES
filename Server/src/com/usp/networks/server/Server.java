@@ -55,6 +55,44 @@ public class Server {
 		
 		return list;
 	}
+	
+	public List<Zone> getListZone(Zone zone) throws SQLException{
+		ResultSet rs = executeQuery("SELECT * FROM Zone;");
+		List<Zone> list = new LinkedList<>();
+		while(rs.next()) {
+			int id = rs.getInt("id");
+			double x = rs.getDouble("x");
+			double y = rs.getDouble("y");
+			double radius = rs.getDouble("radius");
+			Zone z = new Zone(id, x, y, radius);
+			list.add(z);
+		}
+		
+		return list;
+	}
+	
+	private Statement execute() throws SQLException{
+		Connection conn = connect();
+		Statement stmt = conn.createStatement();
+		return stmt;
+	}
+	
+	public void createUser(User u) throws SQLException{
+		Statement stmt = execute();
+		int rows = stmt.executeUpdate("INSERT INTO Users (fname, lname,"
+				+ " login, password, admin) VALUES (" + u.getFName() + ", " + u.getLName() + ", " + u.getLogin() +
+				", " + u.getPassword() + ", " + u.getAdmin() + ");" );
+		if(rows > 0) System.out.println("inserido com sucesso!");
+		stmt.close();
+	}
+	
+	public void createZone(Zone z) throws SQLException{
+		Statement stmt = execute();
+		int rows = stmt.executeUpdate("INSERT INTO Zone (x, y, radius) VALUES ( " + z.getX() +
+				", " + z.getY() + ", " + z.getRadius() + ");");
+		if(rows > 0) System.out.println("Inserido com sucesso!");
+		stmt.close();
+	}
 		
 	public boolean checkZone(XYUser u, Zone z) {
 		double a = Math.pow((u.getX() - z.getX()), 2);
