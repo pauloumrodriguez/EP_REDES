@@ -1,4 +1,4 @@
 
-module Server {
+module Hello {
 	requires java.sql;
 }

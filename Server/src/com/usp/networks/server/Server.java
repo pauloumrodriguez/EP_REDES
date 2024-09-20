@@ -7,11 +7,13 @@ import java.util.LinkedList;
 public class Server {
 	
 	private static Server obj;
+	private Protocol protocol;
 	private HashMap<String, Cmd> table;
 	
 	private Server() {
 		table = new HashMap<>();
 		settingsTable();
+		protocol = Protocol.getInstance();
 	}
 	
 	public static Server getServer() { //Design Patterns Singleton
@@ -19,6 +21,14 @@ public class Server {
 			obj = new Server();
 		}
 		return obj;
+	}
+	
+	public String[] decoding(String msg) {
+		return protocol.decodingMSG(msg);
+	}
+	
+	public String[] attributes(String attr) {
+		return protocol.attributeQuery(attr);
 	}
 	
 	private void settingsTable() {
