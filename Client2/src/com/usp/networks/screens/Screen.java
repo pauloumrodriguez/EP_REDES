@@ -11,6 +11,7 @@ public abstract class Screen extends JFrame {
 	protected Screen(String title){
 		super(title);
 		settingsWindow();
+		//System.out.println("oi");		
 		addLogo();
 	}
 	
@@ -35,7 +36,7 @@ public abstract class Screen extends JFrame {
 	}
 	
 	private void addLogo() {
-		ImageIcon appIcon = new ImageIcon(getClass().getResource("src/icons/eagle-logo.png"));
+		ImageIcon appIcon = new ImageIcon(getClass().getResource("/icons/eagle-logo.png"));
         setIconImage(appIcon.getImage());
 	}
 	
@@ -43,7 +44,7 @@ public abstract class Screen extends JFrame {
 	protected JLabel createLogoCenter(int x, int y, int width) {
         GridBagConstraints gbc = getGBC(1, 10, 10, 10, 10);
 		JLabel logoLabel = new JLabel();
-        ImageIcon logoIcon = new ImageIcon(getClass().getResource("Client/src/icons/eagle-logo.png"));
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/icons/eagle-logo.png"));
         Image img = logoIcon.getImage();
         Image scaledImage = img.getScaledInstance(120, 80, Image.SCALE_SMOOTH); 
         logoIcon = new ImageIcon(scaledImage);
