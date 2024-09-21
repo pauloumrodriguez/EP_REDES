@@ -19,7 +19,7 @@ public class Login extends Screen{
 		userField = createTextField(1, 1, GridBagConstraints.WEST, "User:");
 		passwordField = createPasswordField(1, 2, GridBagConstraints.WEST, "Password:");
 		JLabel forgotPassword = createLink(1, 3, GridBagConstraints.WEST, "Forgot Password?");
-		MouseListiner(forgotPassword, new ForgotKeyScreen());//forgotKey
+		MouseListiner(forgotPassword, null);//forgotKey
 		JButton btnLogin = createButton(1, 4, GridBagConstraints.CENTER, "Enter");
 		ActionListinerBtn(btnLogin, null);//XYScreen
 		createLogoCenter(0, 0, 2);

@@ -15,9 +15,9 @@ public class XYScreen extends Screen{
 	}
 	
 	protected void addComponents() {
-		JButton btnSino = createIcon(20, 20, 1, 0, GridBagConstraints.NORTHEAST, "/icons/sino-icon.png");
+		JButton btnSino = createIcon(20, 20, 1, 0, GridBagConstraints.NORTHEAST, "/icons/sino-png.png");
 		this.ActionListinerBtn(btnSino, null);//Notify
-		JButton btnExit = createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/exit-icon.png");
+		JButton btnExit = createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/logout-8.png");
 		this.ActionListinerBtn(btnExit, new Login());
 		this.createLogoCenter(0,0, 2);
 		latitudeField = this.createTextField(1, 1, GridBagConstraints.WEST, "Latitude:");
