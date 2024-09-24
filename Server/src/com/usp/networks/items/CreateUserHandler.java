@@ -1,10 +1,13 @@
 package com.usp.networks.items;
 
-public class CreateUserHandler implements Handler {
-	public Boolean execute(String[] p) {
+public class CreateUserHandler implements HandlerR {
+	public StringBuilder execute(String[] p) {
 		Database db = Database.getDB();
-		db.executeSQL("INSERT INTO Users (fname, lname, login, password, admin) VALUES ('"+
-		p[0]+"','"+p[1]+"','"+p[2]+"','"+p[3]+"',"+p[4]+");");
-		return true;
+		StringBuilder msg = new StringBuilder("MSG;");
+		Boolean flag = db.executeSQL("INSERT INTO Users (fname, lname, login, password, admin) VALUES ('"+
+		p[1]+"','"+p[2]+"','"+p[3]+"','"+p[4]+"',"+p[5]+");");
+		if(flag) msg.append("\"User created with sucess\":");
+		else msg.append("\"Unable to register user\":");
+		return msg;
 	}
 }

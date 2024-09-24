@@ -1,19 +1,22 @@
 package com.usp.networks.server;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import com.usp.networks.items.*;
 
 public class Protocol {
 	
 	private HashMap<String, Type> mappingType;
-	private HashMap<String, Entity> mappingEntity;
-	private HashMap<String, Integer> mappingP;
+	private HashMap<String, HandlerR> executeR;
+	private HashMap<String, HandlerS> executeS;
 	private static Protocol obj;
 	
 	private Protocol() {
 		mappingType = new HashMap<>();
-		mappingEntity = new HashMap<>();
 		initMappingType();
-		initMappingEntity();
+		initExecutingR();
+		initExecutingS();
 	}
 	
 	public static Protocol getInstance() {
@@ -23,57 +26,71 @@ public class Protocol {
 		return obj;
 	}
 	
-	private void initMappingP() {
-		mappingP.put("id", 0);
-	}
-	
 	private void initMappingType() {
 		mappingType.put("LOGIN", Type.R);
-		mappingType.put("CREATE", Type.S);
-		mappingType.put("UPDATE", Type.S);
-		mappingType.put("DELETE", Type.S);
-		mappingType.put("MSG", Type.R);
-		mappingType.put("XY", Type.R);
-		mappingType.put("LIST", Type.T);
+		mappingType.put("CREATE-USER", Type.R);
+		mappingType.put("CREATE-ZONE", Type.R);
+		mappingType.put("CREATE-ASS", Type.R);
+		mappingType.put("UPDATE-USER", Type.R);
+		mappingType.put("UPDATE-ZONE", Type.R);
+		mappingType.put("DELETE-USER", Type.R);
+		mappingType.put("DELETE-ZONE", Type.R);
+		mappingType.put("DELETE-ASS", Type.R);
+		mappingType.put("XY", Type.S);
+		mappingType.put("LIST-USER", Type.R);
+		mappingType.put("LIST-ZONE", Type.R);
+		mappingType.put("LIST-NOTIFY", Type.R);
 		mappingType.put("SEND", Type.R);
-		mappingType.put("KEEP", Type.R);
-		mappingType.put("PACK", Type.R);
 	}
 	
-	private void initMappingEntity() {
-		mappingEntity.put("ZONE", Entity.ZONE);
-		mappingEntity.put("USER", Entity.USER);
-		mappingEntity.put("ASS", Entity.ASS);
+	private void initExecutingR() {
+		executeR.put("LOGIN", new LoginHadler());
+		executeR.put("CREATE-USER", new CreateUserHandler());
+		executeR.put("CREATE-ZONE", new CreateZoneHandler());
+		executeR.put("CREATE-ASS", new CreateAssHandler());
+		executeR.put("UPDATE-USER", new UpdateUserHandler());
+		executeR.put("UPDATE-ZONE", new UpdateZoneHandler());
+		executeR.put("DELETE-USER", new DeleteUserHandler());
+		executeR.put("DELETE-ZONE", new DeleteZoneHandler());
+		executeR.put("DELETE-ASS", new DeleteAssHandler());
+		executeR.put("LIST-USER", new ListUserHandler());
+		executeR.put("LIST-ZONE", new ListZoneHandler());
+		executeR.put("LIST-NOTIFY", new ListNotifyHandler());
+		executeR.put("SEND", new SendHandler());
 	}
 	
-	public String[] decodingMSG(String msg) {
+	private void initExecutingS() {
+		executeS.put("XY", new XYHandler());
+	}
+	
+	private String[] decodingMSG(String msg) {
 		String[] rs = msg.split("[;:]");
 		return rs;
 	}
 	
-	public String[] attributeQuery(String attributes) {
-		String noParentheless = attributes.replace("(", "").replace(")", "");
-		return noParentheless.split(",");
+	private String cleanString(String msg) {
+		String rs = msg.replace("\"", "");
+		return rs;
 	}
 	
-	public Type mapType(String cmd) {
+	private Type getType(String cmd) {
 		return mappingType.get(cmd);
 	}
 	
-	public Entity mapEntity(String entity) {
-		return mappingEntity.get(entity);
+	public List<StringBuilder> execute(String msg){
+		String[] dcd = decodingMSG(msg);
+		List<StringBuilder> list = new ArrayList<>();
+		for(int i = 0; i < dcd.length; i++) {
+			dcd[i] = cleanString(dcd[i]);
+		}
+		Type typeCmd = getType(dcd[0]);
+		if(typeCmd == Type.S) {
+			HandlerS obj = executeS.get(dcd[0]);
+			return obj.execute(dcd);
+		}
+		HandlerR obj = executeR.get(dcd[0]);
+		list.add(obj.execute(dcd));
+		return list;
+		
 	}
-	
-	public Zone getZone(int id, double x, double y, double radius) {
-		return new Zone(id, x, y, radius);
-	}
-	
-	public User getUser(int id, String fname, String lname, String login, String password, Boolean admin) {
-		return new User(id, fname, lname, login, password, admin);
-	}
-	
-	public XYUser getXYUser(int id, double x, double y) {
-		return new XYUser(id, x, y);
-	}
-	
 }

@@ -22,19 +22,20 @@ public class Database {
 		return DriverManager.getConnection(url);
 	}
 	
-	public void executeSQL(String sql){
-		
+	public Boolean executeSQL(String sql){
+		boolean flag = false;
 		try {
 			Connection conn = connect();
 			Statement stmt = conn.createStatement();
 			stmt.execute(sql);
 			stmt.close();
 			conn.close();
+			flag = true;
 		}
 		catch(SQLException e) {
 			System.out.println("Error in SQL: " + e.getMessage());
 		}
-		
+		return flag;
 	}
 	
 	public ResultSet executeSelect(String sql) {

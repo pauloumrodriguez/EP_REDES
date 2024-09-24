@@ -1,15 +1,23 @@
 package com.usp.networks.app;
 
-import com.usp.networks.server.*;
+import java.io.*;
+import java.net.*;
 
 public class AppServer {
 	public static void main(String[] args) {
-		Server server = Server.getServer();
-		String msg = "XY;(id,x,y);1;50.5;76.4:";
-		String[] rs = server.decoding(msg);
-		String[] p = server.attributes(rs[1]);
-		for(String n: p) {
-			System.out.println(n);
+		try(ServerSocket serverSocket = new ServerSocket(12345)){
+			System.out.println("Server started and waiting for connections...");
+			while(true) {
+				Socket clientSocket = serverSocket.accept();
+				System.out.println("Connected Client: " + clientSocket.getInetAddress().getHostAddress());
+				ThreadClient client = new ThreadClient(clientSocket);
+				Thread thread = new Thread(client);
+				thread.start();
+			}
 		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }
