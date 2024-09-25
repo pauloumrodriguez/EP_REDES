@@ -22,11 +22,15 @@ public class Database {
 		return DriverManager.getConnection(url);
 	}
 	
-	public Boolean executeSQL(String sql){
+	public synchronized Boolean executeSQL(String sql){
 		boolean flag = false;
+		Connection conn = null;
+		Statement stmt = null;
 		try {
-			Connection conn = connect();
-			Statement stmt = conn.createStatement();
+			conn = connect();
+			stmt = conn.createStatement();
+			stmt.execute("PRAGMA journal_mode=WAL;");
+            System.out.println("Modo WAL ativado.");
 			stmt.execute(sql);
 			stmt.close();
 			conn.close();
@@ -35,23 +39,42 @@ public class Database {
 		catch(SQLException e) {
 			System.out.println("Error in SQL: " + e.getMessage());
 		}
+		finally {
+	        try {
+	            if (stmt != null) stmt.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException e) {
+	            System.out.println("Error closing resources: " + e.getMessage());
+	        }
+	    }
 		return flag;
 	}
 	
-	public ResultSet executeSelect(String sql) {
+	public ResultConnection executeSelect(String sql) {
 		ResultSet rs = null;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultConnection resultSet = null;
 		try {
-			Connection conn = connect();
-			Statement stmt = conn.createStatement();
+			conn = connect();
+			stmt = conn.createStatement();
+			stmt.execute("PRAGMA journal_mode=WAL;");
+            System.out.println("Modo WAL ativado.");
 			rs = stmt.executeQuery(sql);
-			stmt.close();
-			conn.close();
+			resultSet = new ResultConnection(rs, stmt, conn);
 		}
 		catch(SQLException e) {
 			System.out.println("Error in SQL: " + e.getMessage());
+			try {
+	            if (stmt != null) stmt.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException exception) {
+	            System.out.println("Error closing resources: " + exception.getMessage());
+	        }
+
 		}
 		
-		return rs;
+		return resultSet;
 		
 	}
 }

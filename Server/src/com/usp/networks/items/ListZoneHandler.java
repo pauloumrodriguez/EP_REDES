@@ -7,10 +7,10 @@ public class ListZoneHandler implements HandlerR {
 	public StringBuilder execute(String[] p) {
 		Database db = Database.getDB();
 		StringBuilder msg = new StringBuilder("PACK;");
-		ResultSet rs = db.executeSelect("SELECT * FROM Zone;");
+		ResultConnection rs = db.executeSelect("SELECT * FROM Zone;");
 		try {
-			while(rs.next()) {
-				Zone z = new Zone(rs.getInt("id"), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("radius"));
+			while(rs.getResultSet().next()) {
+				Zone z = new Zone(rs.getResultSet().getInt("id"), rs.getResultSet().getDouble("x"), rs.getResultSet().getDouble("y"), rs.getResultSet().getDouble("radius"));
 				String a = z.getID() + "," + z.getX() + "," + z.getY() + ","
 						+ z.getRadius();
 				msg.append(String.join(";", a));
