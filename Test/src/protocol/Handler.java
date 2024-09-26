@@ -1,7 +1,7 @@
-package com.usp.networks.items;
+package protocol;
 
 import java.util.List;
 
-public interface HandlerS {
+public interface Handler {
 	public List<StringBuilder> execute(String[] p);
 }

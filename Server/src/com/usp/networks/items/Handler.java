@@ -1,5 +1,5 @@
 package com.usp.networks.items;
 
-public interface HandlerR {
+public interface Handler {
 	public StringBuilder execute(String[] p);
 }

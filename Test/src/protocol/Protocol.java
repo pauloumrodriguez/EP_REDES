@@ -1,4 +1,4 @@
-package com.usp.networks.protocol;
+package protocol;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +19,17 @@ public class Protocol {
 	}
 	
 	public static Protocol getInstance(){
+		if(obj == null) {
+			obj = new Protocol();
+		}
 		return obj;
 	}
 	
 	public List<StringBuilder> execute(String cmd) {
-		cleanString(cmd);
 		String[] rs = decodingMSG(cmd);
+		for(int i = 0; i < rs.length; i++) {
+			rs[i] = cleanString(rs[i]);
+		}
 		return cmds.get(rs[0]).execute(rs);
 	}
 	

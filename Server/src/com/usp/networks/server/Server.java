@@ -1,7 +1,5 @@
 package com.usp.networks.server;
 
-import java.util.List;
-
 public class Server {
 	
 	private static Server obj;
@@ -18,7 +16,7 @@ public class Server {
 		return obj;
 	}
 	
-	public List<StringBuilder> execute(String msg){
+	public StringBuilder execute(String msg){
 		return protocol.execute(msg);
 	}
 }

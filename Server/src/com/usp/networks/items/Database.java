@@ -7,7 +7,7 @@ public class Database {
 	private static Database db;
 	
 	private Database() {
-		url = "jdbc:sqlite:src/server/myDB.db";
+		url = "jdbc:sqlite:src/com/usp/networks/server/myDB.db";
 	}
 	
 	public static Database getDB() {
@@ -30,6 +30,7 @@ public class Database {
 			conn = connect();
 			stmt = conn.createStatement();
 			stmt.execute("PRAGMA journal_mode=WAL;");
+			stmt.execute("PRAGMA foreign_keys = ON;");
             System.out.println("Modo WAL ativado.");
 			stmt.execute(sql);
 			stmt.close();
@@ -59,6 +60,7 @@ public class Database {
 			conn = connect();
 			stmt = conn.createStatement();
 			stmt.execute("PRAGMA journal_mode=WAL;");
+			stmt.execute("PRAGMA foreign_keys = ON;");
             System.out.println("Modo WAL ativado.");
 			rs = stmt.executeQuery(sql);
 			resultSet = new ResultConnection(rs, stmt, conn);

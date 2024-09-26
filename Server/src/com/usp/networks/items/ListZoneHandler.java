@@ -3,7 +3,7 @@ package com.usp.networks.items;
 import java.sql.*;
 import com.usp.networks.server.Zone;
 
-public class ListZoneHandler implements HandlerR {
+public class ListZoneHandler implements Handler {
 	public StringBuilder execute(String[] p) {
 		Database db = Database.getDB();
 		StringBuilder msg = new StringBuilder("PACK;");
@@ -16,6 +16,8 @@ public class ListZoneHandler implements HandlerR {
 				msg.append(String.join(";", a));
 			}
 			rs.close();
+			msg.append(":");
+			System.out.println("zone list successfully generated");
 		}
 		catch(SQLException e) {
 			StringBuilder msgException = new StringBuilder("MSG;");
