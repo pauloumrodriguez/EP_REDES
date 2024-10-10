@@ -19,6 +19,9 @@ public class Protocol {
 	}
 	
 	public static Protocol getInstance(){
+		if(obj == null) {
+			obj = new Protocol();
+		}
 		return obj;
 	}
 	

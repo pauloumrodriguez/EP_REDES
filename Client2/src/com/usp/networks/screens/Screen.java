@@ -1,17 +1,25 @@
 package com.usp.networks.screens;
 
 import java.awt.*;
+import java.util.List;
+import java.io.*;
+import java.net.Socket;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import com.usp.networks.protocol.Protocol;
 
 public abstract class Screen extends JFrame {
 	private static final long serialVersionUID = 1L;
 	protected JPanel mainScreen;
+	private Socket client;
+	private BufferedReader in;
+	private PrintWriter out;
 	
 	protected Screen(String title){
 		super(title);
 		settingsWindow();
-		//System.out.println("oi");		
 		addLogo();
 	}
 	
@@ -19,12 +27,12 @@ public abstract class Screen extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setBounds(100, 100, 400, 350);
 		this.setLayout(new GridBagLayout());
-		this.setResizable(true);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		
 		mainScreen = new JPanel(new GridBagLayout());
         mainScreen.setBackground(new Color(245, 245, 245));
-        mainScreen.setBorder(new EmptyBorder(20, 20, 20, 20));
+        mainScreen.setBorder(new EmptyBorder(80, 80, 80, 80));
         setContentPane(mainScreen);
 	}
 	
@@ -117,7 +125,10 @@ public abstract class Screen extends JFrame {
 		gbc.anchor = anchor;
 		JTextField field = new JTextField(15);
         field.setFont(new Font("Arial", Font.PLAIN, 14));
-        field.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        field.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.GRAY),
+        		new EmptyBorder(4, 4, 4, 4)
+        ));
         this.addPanel(field, gbc);
         return field;
 	}
@@ -130,9 +141,26 @@ public abstract class Screen extends JFrame {
 		gbc.anchor = anchor;
 		JPasswordField password = new JPasswordField(15);
 		password.setFont(new Font("Arial", Font.PLAIN, 14));
-		password.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+		password.setBorder(BorderFactory.createCompoundBorder(
+        		BorderFactory.createLineBorder(Color.GRAY),
+        		new EmptyBorder(4, 4, 4, 4)
+        ));
 		this.addPanel(password, gbc);
 		return password;
+	}
+	
+	protected JComboBox<String> createComboBox(int x, int y, int anchor, String title) {
+		createLabel(0, y, GridBagConstraints.EAST, title);
+		GridBagConstraints gbc = getGBC(1, 10, 10, 10, 10);
+		gbc.gridx = x;
+		gbc.gridy = y;
+		gbc.anchor = anchor;
+//		JComboBox<String> field = new JComboBox<>(userOptions);
+		JComboBox<String> field = new JComboBox<>();
+        field.setFont(new Font("Arial", Font.PLAIN, 14));
+        field.setPreferredSize(new Dimension(170, 25)); 
+        this.addPanel(field, gbc);
+        return field;
 	}
 	
 	protected JLabel createLabel(int x, int y, int anchor, String title) {
@@ -169,6 +197,36 @@ public abstract class Screen extends JFrame {
         return btn;
 	}
 	
+	protected List<StringBuilder> sendMessage(String message) {
+		try {
+			client = new Socket("192.168.0.88", 12345);
+			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+			out = new PrintWriter(client.getOutputStream(), true);
+			
+			//mandar mensagem
+			if(message != null && !message.isEmpty()) {
+				out.println(message);
+			}
+			
+			//ler a mensagem
+			try {
+				String response;
+				while((response = in.readLine()) != null) {
+					Protocol p = Protocol.getInstance();
+					return p.execute(response);
+				}
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	protected abstract void addComponents();
 	
 	protected void addPanel(Component c, GridBagConstraints gbc) {
@@ -177,6 +235,8 @@ public abstract class Screen extends JFrame {
 	
 	public void showScreen() {
 		setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
 	}
 	
 }

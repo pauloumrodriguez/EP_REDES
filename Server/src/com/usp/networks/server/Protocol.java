@@ -35,6 +35,8 @@ public class Protocol {
 		execute.put("LIST-NOTIFY", new ListNotifyHandler());
 		execute.put("SEND", new SendHandler());
 		execute.put("XY", new XYHandler());
+		execute.put("UPDATE-PASSWORD", new UpdatePasswordHandler());
+		execute.put("DELETE-NOTIFY", new DeleteNotifyHandler());
 	}
 		
 	private String[] decodingMSG(String msg) {

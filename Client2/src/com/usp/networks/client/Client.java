@@ -1,5 +1,5 @@
 package com.usp.networks.client;
 
-public abstract class Client {
+public class Client {
 	//Please, should complete
 }

@@ -15,7 +15,7 @@ public class LoginHadler implements Handler{
 			else {
 				String password = rs.getResultSet().getString("password");
 				if(password.compareTo(p[2]) == 0) {
-					msg.append("\"Connect with sucess\"|" + rs.getResultSet().getBoolean("admin") + "|:");
+					msg.append("\"Connect with sucess\"|" + rs.getResultSet().getBoolean("admin") + "|" + rs.getResultSet().getInt("id") + "|:");
 					System.out.println("Connect with sucess");
 				}
 				else {
