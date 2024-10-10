@@ -13,9 +13,9 @@ public class ListUserHandler implements Handler{
 				User u = new User(rs.getResultSet().getInt("id"), rs.getResultSet().getString("fname"),
 						rs.getResultSet().getString("lname"), rs.getResultSet().getString("login"), rs.getResultSet().getString("password"),
 						rs.getResultSet().getBoolean("admin"));
-				String a = u.getID() + "," + u.getFName() + "," + u.getLName() + "," +
-						u.getLogin() + "," + u.getPassword() + "," + u.getAdmin();
-				msg.append(String.join(";", a));
+				String a = "\"" + u.getID() + "," + u.getFName() + "," + u.getLName() + "," +
+						u.getLogin() + "," + u.getPassword() + "," + u.getAdmin() + "\"";
+				msg.append(a + ";");
 			}
 			msg.append(":");
 			rs.close();

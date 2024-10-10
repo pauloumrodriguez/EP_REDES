@@ -9,8 +9,8 @@ public class ListNotifyHandler implements Handler {
 		StringBuilder msg = new StringBuilder("PACK;");
 		try {
 			while(rs.getResultSet().next()) {
-				String a = rs.getResultSet().getString("sender") + "," + rs.getResultSet().getString("message");
-				msg.append(String.join(";", a));
+				String a = "\"" + rs.getResultSet().getInt("id") + "," + rs.getResultSet().getString("sender") + "," + rs.getResultSet().getString("message") + "\"";
+				msg.append(a + ";");
 			}
 			rs.close();
 			msg.append(":");

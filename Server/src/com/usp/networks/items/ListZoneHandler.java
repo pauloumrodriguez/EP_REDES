@@ -11,9 +11,9 @@ public class ListZoneHandler implements Handler {
 		try {
 			while(rs.getResultSet().next()) {
 				Zone z = new Zone(rs.getResultSet().getInt("id"), rs.getResultSet().getDouble("x"), rs.getResultSet().getDouble("y"), rs.getResultSet().getDouble("radius"));
-				String a = z.getID() + "," + z.getX() + "," + z.getY() + ","
-						+ z.getRadius();
-				msg.append(String.join(";", a));
+				String a = "\"" + z.getID() + "," + z.getX() + "," + z.getY() + ","
+						+ z.getRadius() + "\"";
+				msg.append(a + ";");
 			}
 			rs.close();
 			msg.append(":");
