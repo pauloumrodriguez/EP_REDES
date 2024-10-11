@@ -72,13 +72,18 @@ public class UpdateUserScreen extends Screen{
 		
 		btnUpdate.addActionListener(e -> {
 			if(!getUser().isEmpty() && !getPassword().isEmpty() && !getFname().isEmpty() && !getLname().isEmpty()) {//Verifica os campos não estão vazios
-					String message = "\"UPDATE-USER\";\"" + idUsers.get(getUser()) + "\";\"" + getFname() + "\";\"" + getLname() + "\";\"" + getUser() + "\";\"" + getPassword() + "\";\"" + isAdmin +"\":";
-					List<StringBuilder> list = sendMessage(message);//Pede para atualizar usuário
-					if(list.get(0).toString().equals("\"User updated with success\"")) {
-						JOptionPane.showMessageDialog(null, "User updated with success", "OK", JOptionPane.INFORMATION_MESSAGE);
+					if(getUser().equals(Login.getLogin())) {
+						JOptionPane.showMessageDialog(null, "Can't update yourself", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Unable to update", "Error", JOptionPane.ERROR_MESSAGE);
+						String message = "\"UPDATE-USER\";\"" + idUsers.get(getUser()) + "\";\"" + getFname() + "\";\"" + getLname() + "\";\"" + getUser() + "\";\"" + getPassword() + "\";\"" + isAdmin +"\":";
+						List<StringBuilder> list = sendMessage(message);//Pede para atualizar usuário
+						if(list.get(0).toString().equals("\"User updated with success\"")) {
+							JOptionPane.showMessageDialog(null, "User updated with success", "OK", JOptionPane.INFORMATION_MESSAGE);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Unable to update", "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				} 
 			clearFields();

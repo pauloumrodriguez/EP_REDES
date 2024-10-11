@@ -36,7 +36,7 @@ public class XYScreen extends Screen{
 				String msgXY = "XY;" + Login.getLogin() + ";" + getLatitude() + ";" + getLongitude() + ":";
 				List<StringBuilder> response = sendMessage(msgXY);//Envia as coordenadas atuais
 				if(response.getFirst().toString().replace("\"", "").trim().equals("Successfully verified")) {
-					JOptionPane.showMessageDialog(null, "Sent successfully", "Success", JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(null, "Sent successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Unable to send", "Error", JOptionPane.ERROR_MESSAGE);
