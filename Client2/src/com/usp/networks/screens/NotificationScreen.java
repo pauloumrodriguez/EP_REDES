@@ -39,13 +39,6 @@ public class NotificationScreen extends Screen {
         String msg = "\"LIST-NOTIFY\";\"" + Login.getLogin() + "\";\"" + Login.getAdmin() + "\":";
         List<StringBuilder> listResponse = sendMessage(msg); //Pede as notificações
 
-        if (listResponse == null) { //Volta se não há notificações
-            Screen back;
-            if (Login.getAdmin()) back = new AdmScreen();
-            else back = new XYScreen();
-            back.showScreen();
-        }
-
         for (int i = 0; i < listResponse.size(); i++) {
             String notifyContent = listResponse.get(i).toString().replace("\"", "");
             String[] splitNotifyContent = notifyContent.split("\\|");
