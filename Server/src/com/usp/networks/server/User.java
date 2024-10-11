@@ -1,6 +1,6 @@
 package com.usp.networks.server;
 
-public class User {
+public class User { //Representa a entidade usuário
 	
 	private int id;
 	private String fname;
@@ -18,27 +18,27 @@ public class User {
 		this.admin = admin;
 	}
 	
-	public int getID() {
+	public int getID() { //Devolve ID
 		return id;
 	}
 	
-	public String getFName() {
+	public String getFName() { //Devolve primeiro nome
 		return fname;
 	}
 	
-	public String getLName() {
+	public String getLName() { //Devolve último nome
 		return lname;
 	}
 	
-	public String getLogin() {
+	public String getLogin() { //Devolve login
 		return login;
 	}
 	
-	public String getPassword() {
+	public String getPassword() { //Devolve senha
 		return password;
 	}
 	
-	public Boolean getAdmin() {
+	public Boolean getAdmin() { //Devolve se ele é admin
 		return admin;
 	}
 }

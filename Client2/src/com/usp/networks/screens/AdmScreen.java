@@ -12,16 +12,16 @@ public class AdmScreen extends Screen {
 	}
 
 	@Override
-	protected void addComponents() {
+	protected void addComponents() { //Cria o layout da página
 
-		JButton btnExit = createIcon(28, 28, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
-		this.ActionListinerBtn(btnExit, new Login());
+		JButton btnExit = createIcon(28, 28, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png"); //Botão de sair
+		this.ActionListinerBtn(btnExit, new Login()); //Volta para a tela de login
 
-		JButton btnSino = createIcon(25, 25, 2, 0, GridBagConstraints.NORTHEAST, "/icons/sino-png.png");
+		JButton btnSino = createIcon(25, 25, 2, 0, GridBagConstraints.NORTHEAST, "/icons/sino-png.png"); //Botão de notificação
 		btnSino.addActionListener(e -> {
 			this.dispose();
 			NotificationScreen notificationScreen = new NotificationScreen();
-			notificationScreen.showScreen();
+			notificationScreen.showScreen(); //Abre a tela de notificações quando clicado
 		});
 		
 		createLabel(0, 1, GridBagConstraints.WEST, "Users");
@@ -64,7 +64,7 @@ public class AdmScreen extends Screen {
 			updateScreen.showScreen();  // Abre a nova tela AssociationScreen
 		});
 		
-		createLogoCenter(0, 0, 3);
+		createLogoCenter(0, 0, 3); //Cria a logo central
 	}
 
 }

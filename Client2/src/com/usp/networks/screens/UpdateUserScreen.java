@@ -23,7 +23,7 @@ public class UpdateUserScreen extends Screen{
 		addComponents();
 	}
 	
-	protected void addComponents() {
+	protected void addComponents() { //Cira o layout da página
 		createLogoCenter(0, 0, 3);
 		JButton btnExit = this.createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
 		
@@ -45,7 +45,7 @@ public class UpdateUserScreen extends Screen{
         adminField.addItem("Yes");
         adminField.addItem("No");
         
-        adminField.addActionListener(e -> {
+        adminField.addActionListener(e -> { //Selecionou o campo "Admin"
              String opcao = (String) adminField.getSelectedItem();
              if(opcao.equals("Yes")) {
             	 isAdmin = true;
@@ -55,14 +55,14 @@ public class UpdateUserScreen extends Screen{
         });
         
         String msgList = "\"LIST-USER\";";
-		List<StringBuilder>listResponse = sendMessage(msgList);
+		List<StringBuilder>listResponse = sendMessage(msgList); //Pede a lista de usuários
       
         for (int i = 0; i < listResponse.size(); i++) {
         	String UserContent = listResponse.get(i).toString().replace("\"", "");
-        	String[] splitUserContent = decode(UserContent);
+        	String[] splitUserContent = decode(UserContent); //Decodifica os campos
         	
         	
-            String id = splitUserContent[0]; // ID do usuári
+            String id = splitUserContent[0]; // ID do usuários
             String email = splitUserContent[3]; // email
             
             idUsers.put(email, Integer.parseInt(id));	
@@ -71,11 +71,11 @@ public class UpdateUserScreen extends Screen{
 		JButton btnUpdate = this.createButton(1, 6, GridBagConstraints.CENTER, "Update User");
 		
 		btnUpdate.addActionListener(e -> {
-			if(!getUser().isEmpty() && !getPassword().isEmpty() && !getFname().isEmpty() && !getLname().isEmpty()) {
+			if(!getUser().isEmpty() && !getPassword().isEmpty() && !getFname().isEmpty() && !getLname().isEmpty()) {//Verifica os campos não estão vazios
 					String message = "\"UPDATE-USER\";\"" + idUsers.get(getUser()) + "\";\"" + getFname() + "\";\"" + getLname() + "\";\"" + getUser() + "\";\"" + getPassword() + "\";\"" + isAdmin +"\":";
-					List<StringBuilder> list = sendMessage(message);
-					if(list.get(0).toString().equals("\"User updated with sucess\"")) {
-						JOptionPane.showMessageDialog(null, "User updated with sucess", "OK", JOptionPane.INFORMATION_MESSAGE);
+					List<StringBuilder> list = sendMessage(message);//Pede para atualizar usuário
+					if(list.get(0).toString().equals("\"User updated with success\"")) {
+						JOptionPane.showMessageDialog(null, "User updated with success", "OK", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else {
 						JOptionPane.showMessageDialog(null, "Unable to update", "Error", JOptionPane.ERROR_MESSAGE);

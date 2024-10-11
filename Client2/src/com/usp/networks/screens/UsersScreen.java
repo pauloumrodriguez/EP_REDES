@@ -26,7 +26,7 @@ public class UsersScreen extends Screen {
     }
 
     @Override
-    protected void addComponents() {
+    protected void addComponents() { //Cria layout da página
 
         createLogoCenter(0, 0, 2);
 
@@ -75,9 +75,9 @@ public class UsersScreen extends Screen {
             			rs[i] = rs[i].trim();
             		}
             		String msg = "\"DELETE-USER\";\"" + idUsers.get(rs[3]) + "\":";
-            		List<StringBuilder> listMSG = sendMessage(msg);
+            		List<StringBuilder> listMSG = sendMessage(msg);//Deleta usuário
             		
-            		if(listMSG.get(0).toString().equals("\"User deleted with sucess\"")) {
+            		if(listMSG.get(0).toString().equals("\"User deleted with success\"")) {
                         listModel.remove(selectedIndex);
             		}
             		else {
@@ -132,11 +132,11 @@ public class UsersScreen extends Screen {
     private void updateList() {
     	listModel.clear();
     	String msgList = "\"LIST-USER\";";
-		List<StringBuilder>listResponse = sendMessage(msgList);
+		List<StringBuilder>listResponse = sendMessage(msgList); //Pede a lista
       
         for (int i = 0; i < listResponse.size(); i++) {
         	String UserContent = listResponse.get(i).toString().replace("\"", "");
-        	String[] splitUserContent = decode(UserContent);
+        	String[] splitUserContent = decode(UserContent);//Decodifica o registro
         	
         	
             String id = splitUserContent[0]; // ID do usuário
@@ -155,8 +155,8 @@ public class UsersScreen extends Screen {
     // aqui é adicionado um usuário à lista com o ícone de lixeira ao lado dele
     private void CreateUser(String login, String fname, String lname, String password, Boolean admin) {
     	String msgCreate = "\"CREATE-USER\";\"" + fname + "\";\"" + lname + "\";\"" + login + "\";\"" + password + "\";\"" + admin + "\":";
-		List<StringBuilder> list = sendMessage(msgCreate);
-		if(list.get(0).toString().equals("\"User created with sucess\"")) {
+		List<StringBuilder> list = sendMessage(msgCreate);//Pede para criar usuário
+		if(list.get(0).toString().equals("\"User created with success\"")) {
 			updateList();
 		}
     }

@@ -3,9 +3,9 @@ package com.usp.networks.server;
 import java.util.HashMap;
 import com.usp.networks.items.*;
 
-public class Protocol {
+public class Protocol { //Classe responsável pela implementação do protocolo da aplicação
 	
-	private HashMap<String, Handler> execute;
+	private HashMap<String, Handler> execute; //Mapeia os comandos do protocolo para as ações
 	private static Protocol obj;
 	
 	private Protocol() {
@@ -13,7 +13,7 @@ public class Protocol {
 		initExecuting();
 	}
 	
-	public static Protocol getInstance() {
+	public static Protocol getInstance() { //Design Patterns Singleton
 		if(obj == null) {
 			obj = new Protocol();
 		}
@@ -40,12 +40,12 @@ public class Protocol {
 	}
 		
 	private String[] decodingMSG(String msg) {
-		String[] rs = msg.split("[;:]");
+		String[] rs = msg.split("[;:]"); //Decodifica os campos
 		return rs;
 	}
 	
 	private String cleanString(String msg) {
-		String rs = msg.replace("\"", "").replace("\n", "");
+		String rs = msg.replace("\"", "").replace("\n", ""); //Limpa os campos
 		return rs;
 	}
 	
@@ -56,10 +56,10 @@ public class Protocol {
 		}
 		
 		if(execute.get(dcd[0]) == null) {
-			StringBuilder msgException = new StringBuilder("MSG;\"I don't know this command\":");
+			StringBuilder msgException = new StringBuilder("MSG;\"I don't know this command\":"); //Não conhece o comando
 			return msgException;
 		}
-		return execute.get(dcd[0]).execute(dcd);
+		return execute.get(dcd[0]).execute(dcd); //Executa a requisição
 		
 	}
 }

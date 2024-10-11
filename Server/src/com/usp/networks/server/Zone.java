@@ -1,6 +1,6 @@
 package com.usp.networks.server;
 
-public class Zone {
+public class Zone { //Representa a entidade zona
 	private int id;
 	private double x;
 	private double y;
@@ -13,19 +13,19 @@ public class Zone {
 		this.radius = radius;
 	}
 	
-	public double getX() {
+	public double getX() { //Devolve a coordenada X do ponto central
 		return this.x;
 	}
 	
-	public double getY() {
+	public double getY() { //Devolve a coordenada Y do ponto central
 		return this.y;
 	}
 	
-	public double getRadius() {
+	public double getRadius() { //Devolve o raio da zona
 		return this.radius;
 	}
 	
-	public int getID() {
+	public int getID() { //Devolve o ID
 		return this.id;
 	}
 }

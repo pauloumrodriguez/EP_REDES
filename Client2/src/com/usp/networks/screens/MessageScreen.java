@@ -15,7 +15,7 @@ public class MessageScreen extends Screen {
     private JButton btnSend;
 	private String userSelect;
 	private HashMap<String, Integer> EmailId;
-	private int valorIdUser = -1;
+	private int valorIdUser = -1; //Caso se não houve seleção do usuário
 
     public MessageScreen() {
         super("Messages");
@@ -23,14 +23,14 @@ public class MessageScreen extends Screen {
     }
 
     @Override
-    protected void addComponents() {
+    protected void addComponents() { //Cria layout da página
 
-    	createLogoCenter(0, 0, 3);
+    	createLogoCenter(0, 0, 3); //Cria a logo
     	
     	EmailId = new HashMap<String, Integer>();
 
-        JButton btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
-        this.ActionListinerBtn(btnExit, new AdmScreen());
+        JButton btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png"); //Botão de voltar
+        this.ActionListinerBtn(btnExit, new AdmScreen()); //Volta para a tela de Admin
         add(btnExit, getConstraints(0, 0, GridBagConstraints.WEST, 0, 0, 0, 0));
 
         JComboBox<String> userBox = createComboBox(1, 3, GridBagConstraints.CENTER, "Message to:");
@@ -42,16 +42,16 @@ public class MessageScreen extends Screen {
         add(getBtnSend(), getConstraints(2, 3, GridBagConstraints.CENTER, 10, 10, 10, 10));
         
 		String message = "\"LIST-USER\";";
-		List<StringBuilder> list = sendMessage(message);
+		List<StringBuilder> list = sendMessage(message); //Pede a lista de usuários
                 
         for (int i = 0; i < list.size(); i++) {
         	String UserContent = list.get(i).toString().replace("\"", "");
-        	String[] splitUserContent = decode(UserContent);
+        	String[] splitUserContent = decode(UserContent);//Decodifica registro
         	
         	
-            String id = splitUserContent[0]; // ID do usuário
-            String email = splitUserContent[3]; // email
-            String admin = splitUserContent[5];
+            String id = splitUserContent[0]; //ID do usuário
+            String email = splitUserContent[3]; //email
+            String admin = splitUserContent[5]; //admin
         	
             // Adicionar ao JComboBox e armazenar o ID
             if(!Boolean.parseBoolean(admin)) {
@@ -61,7 +61,7 @@ public class MessageScreen extends Screen {
             
         }
 
-        userBox.addActionListener(e -> {
+        userBox.addActionListener(e -> { //Seleciona usuário
             userSelect = (String) userBox.getSelectedItem();
             valorIdUser = EmailId.get(userSelect);
         });
@@ -96,9 +96,9 @@ public class MessageScreen extends Screen {
                     	int idUser = valorIdUser;
                     	if(idUser != -1) {
             				String msg = "\"SEND\";\""  + userSelect + "\";\"" + Login.getLogin() + "\";\"" + message + "\":";
-            				List<StringBuilder> listSend = sendMessage(msg);
+            				List<StringBuilder> listSend = sendMessage(msg); //Envia a mensagem
             				
-                    		if(listSend.get(0).toString().equals("\"Sent with sucess\"")) {
+                    		if(listSend.get(0).toString().equals("\"Sent with success\"")) {
 	                            getMessageField().setText("");
                     		}
                     	}

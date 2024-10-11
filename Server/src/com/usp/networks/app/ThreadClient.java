@@ -8,7 +8,7 @@ public class ThreadClient implements Runnable{
 	private Server server;
 	private Socket client;
 	
-	public ThreadClient(Socket client) {
+	public ThreadClient(Socket client) { //	Thread de requisição dos clientes
 		this.client = client;
 		server = Server.getServer();
 	}
@@ -20,7 +20,7 @@ public class ThreadClient implements Runnable{
 			PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 			String msg;
 			while((msg = in.readLine()) != null) {
-				out.println(server.execute(msg));
+				out.println(server.execute(msg)); //Envia o resultado da requisição ao cliente
 			}
 		}
 		catch(IOException e) {

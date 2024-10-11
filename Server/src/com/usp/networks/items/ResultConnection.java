@@ -7,7 +7,8 @@ public class ResultConnection {
 	 private Statement statement;
 	 private Connection connection;
 	 
-	 public ResultConnection(ResultSet rs, Statement stmt, Connection conn) {
+	 public ResultConnection(ResultSet rs, Statement stmt, Connection conn) { //Objeto intermediário para os comandos SELECT
+		 //Agrupa os items para permitir o fechamento da conexão com o banco de dados
 		 this.resultSet = rs;
 		 this.statement = stmt;
 		 this.connection = conn;

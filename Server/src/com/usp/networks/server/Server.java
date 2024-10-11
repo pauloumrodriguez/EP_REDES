@@ -1,12 +1,12 @@
 package com.usp.networks.server;
 
 public class Server {
-	
+	//Representa o Servidor
 	private static Server obj;
 	private Protocol protocol;
 	
 	private Server() {
-		protocol = Protocol.getInstance();
+		protocol = Protocol.getInstance(); //Instala protocolo da aplicação
 	}
 	
 	public static Server getServer() { //Design Patterns Singleton
@@ -17,6 +17,6 @@ public class Server {
 	}
 	
 	public StringBuilder execute(String msg){
-		return protocol.execute(msg);
+		return protocol.execute(msg); //Executa requisições
 	}
 }

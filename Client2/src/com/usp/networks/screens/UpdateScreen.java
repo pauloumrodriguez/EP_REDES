@@ -11,7 +11,7 @@ public class UpdateScreen extends Screen{
 		addComponents();
 	}
 	
-	protected void addComponents() {
+	protected void addComponents() {//Cria o layout da página
 		createLogoCenter(0, 0, 3);
 		JButton btnExit = this.createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
 		

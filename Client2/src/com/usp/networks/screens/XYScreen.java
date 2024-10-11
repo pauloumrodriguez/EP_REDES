@@ -16,7 +16,7 @@ public class XYScreen extends Screen{
 		
 	}
 	
-	protected void addComponents() {
+	protected void addComponents() { //Cria layout da página
 		JButton btnSino = createIcon(20, 20, 1, 0, GridBagConstraints.NORTHEAST, "/icons/sino-png.png");
 		btnSino.addActionListener(e -> {
 			this.dispose();
@@ -32,9 +32,9 @@ public class XYScreen extends Screen{
 		
 		JButton btnSend = this.createButton(1, 3, GridBagConstraints.WEST, "Send Position");
 		btnSend.addActionListener(e -> {
-			if(!getLatitude().isEmpty() && !getLongitude().isEmpty()) {
+			if(!getLatitude().isEmpty() && !getLongitude().isEmpty()) { //Verifica se os campos não estão vazios
 				String msgXY = "XY;" + Login.getLogin() + ";" + getLatitude() + ";" + getLongitude() + ":";
-				List<StringBuilder> response = sendMessage(msgXY);
+				List<StringBuilder> response = sendMessage(msgXY);//Envia as coordenadas atuais
 				if(response.getFirst().toString().replace("\"", "").trim().equals("Successfully verified")) {
 					JOptionPane.showMessageDialog(null, "Sent successfully", "Success", JOptionPane.OK_OPTION);
 				}

@@ -25,33 +25,35 @@ public class Login extends Screen{
 	}
 	
 	@Override
-	protected void addComponents() {
+	protected void addComponents() { //Cria o layout da página
 		userField = createTextField(1, 1, GridBagConstraints.WEST, "User:");
 		passwordField = createPasswordField(1, 2, GridBagConstraints.WEST, "Password:");
 		JLabel forgotPassword = createLink(1, 3, GridBagConstraints.WEST, "Forgot Password?");
-		MouseListiner(forgotPassword, new ForgotKeyScreen());
+		MouseListiner(forgotPassword, new ForgotKeyScreen()); //Entra na tela de  "Esqueci senha"
 		
 		JButton btnLogin = createButton(1, 4, GridBagConstraints.CENTER, "Enter");
 		btnLogin.addActionListener(e -> {
 			if(!getUserField().isEmpty() && !(new String(getPasswordField()).isEmpty())) {
 				String message = "LOGIN;" + getUserField() + ";" + new String(getPasswordField()) + ":";
 				list = sendMessage(message);
-				if(checkResponse(list)) {
+				if(checkResponse(list)) {//Verifica se foi aceito o login
 					login = getUserField();
-					this.dispose();
+					this.dispose(); //Fecha tela
 				}
 				else {
 					clearFields();
+					//Exibe Pop-Up de erro
 					JOptionPane.showMessageDialog(null, list.getFirst().toString().replace("\"", "").trim(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else {
+				//Precisa preencher os campos
 				JOptionPane.showMessageDialog(null, "Fill in the fields", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
 		});
 		
-		createLogoCenter(0, 0, 2);
+		createLogoCenter(0, 0, 2); //Cria a logo
 	}
 	
 	public String getUserField() {
@@ -67,18 +69,18 @@ public class Login extends Screen{
     	passwordField.setText("");
     }
 	
-    private boolean checkResponse(List<StringBuilder> list) {
+    private boolean checkResponse(List<StringBuilder> list) { //Verifica se o login foi aceito
         if (list != null) {
             for (StringBuilder sb : list) {
                 String[] value = sb.toString().split("\\|");
                 
                 String mensagemSemAspas = value[0].replace("\"", "").trim();
                 
-                if (mensagemSemAspas.trim().equals("Connect with sucess")) {
+                if (mensagemSemAspas.trim().equals("Connect with success")) {
                 	String valorBooleano = value[1].trim();
                     admin = Boolean.parseBoolean(valorBooleano);
                 	idUser = Integer.parseInt(value[2].trim());
-                	if(admin) {
+                	if(admin) { //Verifica se é admin
                         Admin.getInstance().show();
                 	}
                 	else {
@@ -97,15 +99,15 @@ public class Login extends Screen{
     }
     
     
-    public static int getIdUser() {
+    public static int getIdUser() { //Devolve ID do usuário
     	return idUser;
     }
     
-    public static String getLogin() {
+    public static String getLogin() { //Devolve login do usuário
     	return login;
     }
     
-    public static boolean getAdmin() {
+    public static boolean getAdmin() { //Devolve admin
     	return admin;
     }
 	

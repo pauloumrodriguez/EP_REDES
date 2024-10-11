@@ -15,7 +15,7 @@ public class NotificationScreen extends Screen {
         addComponents();
     }
 
-    protected void addComponents() {
+    protected void addComponents() {//Cria o layout da página
         DefaultListModel<String> listModel = new DefaultListModel<>();
         JList<String> list = new JList<>(listModel);
         
@@ -37,9 +37,9 @@ public class NotificationScreen extends Screen {
         add(scrollPane, getConstraints(1, 2, GridBagConstraints.CENTER, 20, 10, 0, 0));
 
         String msg = "\"LIST-NOTIFY\";\"" + Login.getLogin() + "\";\"" + Login.getAdmin() + "\":";
-        List<StringBuilder> listResponse = sendMessage(msg);
+        List<StringBuilder> listResponse = sendMessage(msg); //Pede as notificações
 
-        if (listResponse == null) {
+        if (listResponse == null) { //Volta se não há notificações
             Screen back;
             if (Login.getAdmin()) back = new AdmScreen();
             else back = new XYScreen();
@@ -49,10 +49,10 @@ public class NotificationScreen extends Screen {
         for (int i = 0; i < listResponse.size(); i++) {
             String notifyContent = listResponse.get(i).toString().replace("\"", "");
             String[] splitNotifyContent = decode(notifyContent);
-            String id = splitNotifyContent[0]; // id
-            String user = splitNotifyContent[1];
-            String sender = splitNotifyContent[2];
-            String message = splitNotifyContent[3]; // message
+            String id = splitNotifyContent[0]; //id
+            String user = splitNotifyContent[1]; //user
+            String sender = splitNotifyContent[2]; //sender
+            String message = splitNotifyContent[3]; //message
             
             if (Login.getAdmin()) {
                 listModel.addElement(id + " | Recipient: " + user + " | Message: " + message);
@@ -76,9 +76,9 @@ public class NotificationScreen extends Screen {
                         rs[i] = rs[i].trim();
                     }
                     String msgDel = "\"DELETE-NOTIFY\";\"" + rs[0] + "\":";
-                    List<StringBuilder> listMSG = sendMessage(msgDel);
+                    List<StringBuilder> listMSG = sendMessage(msgDel); //Pede para excluir notificação
 
-                    if (listMSG.get(0).toString().equals("\"Notification deleted with sucess\"")) {
+                    if (listMSG.get(0).toString().equals("\"Notification deleted with success\"")) {
                         listModel.remove(selectedIndex);
                     }
                 } else {

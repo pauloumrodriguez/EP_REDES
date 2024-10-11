@@ -21,7 +21,7 @@ public class ZonesScreen extends Screen {
     }
 
     @Override
-    protected void addComponents() {
+    protected void addComponents() {//Cria o layout da página
      
           createLogoCenter(0, 0, 2);
 
@@ -45,7 +45,7 @@ public class ZonesScreen extends Screen {
           btnAdd.addActionListener(new ActionListener() {
               @Override
               public void actionPerformed(ActionEvent e) {
-                  if (!getLatitude().isEmpty() && !getLongitude().isEmpty() && !getRadius().isEmpty()) {
+                  if (!getLatitude().isEmpty() && !getLongitude().isEmpty() && !getRadius().isEmpty()) { //Verifica se os campos não estão vazios
                 	  CreateZone(getLatitude(), getLongitude(), getRadius());  // adiciona o nome do usuário à lista
                       clearFields();
                    }
@@ -66,9 +66,9 @@ public class ZonesScreen extends Screen {
                 			rs[i] = rs[i].trim();
                 		}
                 		String msg = "\"DELETE-ZONE\";\"" + rs[0] + "\":";
-                		List<StringBuilder> listMSG = sendMessage(msg);
+                		List<StringBuilder> listMSG = sendMessage(msg);//Pede para apagar zona
                 		
-                		if(listMSG.get(0).toString().equals("\"Zone deleted with sucess\"")) {
+                		if(listMSG.get(0).toString().equals("\"Zone deleted with success\"")) {
                             listModel.remove(selectedIndex);
                 		}
                 		else {
@@ -103,8 +103,8 @@ public class ZonesScreen extends Screen {
 
     private void CreateZone(String latitude, String longitude, String radius) {
     	String msgCreate = "\"CREATE-ZONE\";\"" + latitude + "\";\"" + longitude + "\";\"" + radius + "\":";
-		List<StringBuilder> list = sendMessage(msgCreate);
-		if(list.get(0).toString().equals("\"Zone created with sucess\"")) {
+		List<StringBuilder> list = sendMessage(msgCreate);//Pede para criar zona
+		if(list.get(0).toString().equals("\"Zone created with success\"")) {
 			updateListZone();
 		}
     }
@@ -112,18 +112,17 @@ public class ZonesScreen extends Screen {
     private void updateListZone() {
     	listModel.clear();
     	String msgList = "\"LIST-ZONE\";";
-		List<StringBuilder>listResponse = sendMessage(msgList);
+		List<StringBuilder>listResponse = sendMessage(msgList);//pede lista
       
         for (int i = 0; i < listResponse.size(); i++) {
         	String ZoneContent = listResponse.get(i).toString().replace("\"", "");
-        	String[] splitZoneContent = decode(ZoneContent);
+        	String[] splitZoneContent = decode(ZoneContent);//decodifica o registro
         	
-            String id = splitZoneContent[0];
-            String x = splitZoneContent[1];
-            String y = splitZoneContent[2];
-            String radius = splitZoneContent[3];
-
-//            idZone.put(email, Integer.parseInt(id));	 
+            String id = splitZoneContent[0]; //id
+            String x = splitZoneContent[1]; //x
+            String y = splitZoneContent[2]; //y
+            String radius = splitZoneContent[3]; //radius
+            
             listModel.addElement(id + " | " + "X: " + x + " | " + "Y: " + 
             y + " | " + "Radius: " + radius);
         }

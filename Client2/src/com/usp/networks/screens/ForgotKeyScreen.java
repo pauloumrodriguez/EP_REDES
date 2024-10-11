@@ -16,41 +16,42 @@ public class ForgotKeyScreen extends Screen {
 		addComponents();
 	}
 	
-	protected void addComponents() {
-		createLogoCenter(0, 0, 3);
-		JButton btnExit = this.createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
+	protected void addComponents() {//Cria layout da página
+		createLogoCenter(0, 0, 3);//Cria logo
+		JButton btnExit = this.createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png"); //Botão de voltar
 		
 		btnExit.addActionListener(e -> {
 			this.dispose();
 			Login login = new Login();
-			login.showScreen();
+			login.showScreen(); //Volta para a página de login
 		});
 
 		
 		userField = this.createTextField(1, 1, GridBagConstraints.WEST, "User:");
 		passwordField = this.createPasswordField(1, 2, GridBagConstraints.WEST, "Password:");
 		confirmField = this.createPasswordField(1, 3, GridBagConstraints.WEST, "Confirm Password:");
-		JButton btnReset = this.createButton(1, 4, GridBagConstraints.CENTER, "Reset Password");
+		JButton btnReset = this.createButton(1, 4, GridBagConstraints.CENTER, "Reset Password"); //Atualiza a senha
 		
 		btnReset.addActionListener(e -> {
-			if(!getUserField().isEmpty() && getPasswordField().length > 0 && getConfirmField().length > 0) {
+			if(!getUserField().isEmpty() && getPasswordField().length > 0 && getConfirmField().length > 0) { //Verifica se os campos não estão vazios
 
-				if(new String(getPasswordField()).equals(new String(getConfirmField()))) {
+				if(new String(getPasswordField()).equals(new String(getConfirmField()))) { //Verifca se os campos "senha" e "confirmar senha" são iguais
 					String message = "\"UPDATE-PASSWORD\";\"" + getUserField() + "\";\"" + new String(getPasswordField()) + "\";\"" +
 				new String(this.getConfirmField()) + "\":";
-					List<StringBuilder> list = sendMessage(message);
-					if(!list.get(0).toString().equals("\"Updated with sucess\"")) {
+					List<StringBuilder> list = sendMessage(message); //Pede para atualizar
+					if(!list.get(0).toString().equals("\"Updated with success\"")) {
+						//Exibe o Pop-Up de erro
 						JOptionPane.showMessageDialog(null, list.getFirst().toString().replace("\"", "").trim(), "Error", JOptionPane.ERROR_MESSAGE);
-						clearFields();
+						clearFields(); //Limpa os campos
 					}
 					else {
 						this.dispose();
 						Login login = new Login();
-						login.showScreen();
+						login.showScreen(); //Volta para o login
 					}
 				} else {
 					clearFields();
-					JOptionPane.showMessageDialog(null, "Enter the same password in the fields");
+					JOptionPane.showMessageDialog(null, "Enter the same password in the fields"); // As senhas não são iguais
 				}
 				
 			}
@@ -69,7 +70,7 @@ public class ForgotKeyScreen extends Screen {
 		return confirmField.getPassword();
 	}
 	
-    private void clearFields() {
+    private void clearFields() { //Limpa os campos
     	userField.setText("");
     	passwordField.setText("");
     	confirmField.setText("");
