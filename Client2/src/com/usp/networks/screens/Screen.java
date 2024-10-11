@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.List;
 import java.io.*;
 import java.net.Socket;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -198,7 +197,18 @@ public abstract class Screen extends JFrame {
 	
 	protected List<StringBuilder> sendMessage(String message) { //Envia mensagem para o servidor
 		try {
-			client = new Socket("192.168.0.55", 12345); //Abre conexão
+			String IpServer = null;
+			try(BufferedReader br = new BufferedReader(new FileReader("src/com/usp/networks/screens/IpServer.txt"))){
+				IpServer = br.readLine();
+				if(IpServer == null) {
+					JOptionPane.showMessageDialog(null, "There is no server address", "Error", JOptionPane.ERROR_MESSAGE);
+					return null;
+				}
+			}
+			catch(IOException e) {
+				JOptionPane.showMessageDialog(null, "Unable to read file", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			client = new Socket(IpServer, 12345); //Abre conexão
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
 			
