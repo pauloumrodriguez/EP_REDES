@@ -199,7 +199,7 @@ public abstract class Screen extends JFrame {
 	
 	protected List<StringBuilder> sendMessage(String message) {
 		try {
-			client = new Socket("192.168.0.88", 12345);
+			client = new Socket("192.168.0.55", 12345);
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(client.getOutputStream(), true);
 			
@@ -208,20 +208,16 @@ public abstract class Screen extends JFrame {
 				out.println(message);
 			}
 			
-			//ler a mensagem
-			try {
-				String response;
-				while((response = in.readLine()) != null) {
-					Protocol p = Protocol.getInstance();
-					return p.execute(response);
-				}
-				
-			} catch (IOException e) {
-				e.printStackTrace();
+			
+			String response;
+			while((response = in.readLine()) != null) {
+				Protocol p = Protocol.getInstance();
+				return p.execute(response);
 			}
+				
 			
 		} catch(IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Server not available", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		
 		return null;
@@ -237,6 +233,27 @@ public abstract class Screen extends JFrame {
 		setVisible(true);
 		pack();
 		setLocationRelativeTo(null);
+	}
+	
+	
+	protected GridBagConstraints getConstraints(int gridx, int gridy, int anchor, int top, int left, int bottom, int right) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = gridx;
+        gbc.gridy = gridy;
+        gbc.anchor = anchor;
+        gbc.insets = new Insets(top, left, bottom, right);
+        return gbc;
+    }
+	
+	 protected GridBagConstraints getConstraints(int gridx, int gridy, int anchor, int top, int left, int bottom, int right, int gridwidth) {
+	        GridBagConstraints gbc = getConstraints(gridx, gridy, anchor, top, left, bottom, right);
+	        gbc.gridwidth = gridwidth;
+	        return gbc;
+	 }
+	 
+	 protected String[] decode(String str) {
+			String[] clean = str.split(",");
+			return clean;
 	}
 	
 }

@@ -2,23 +2,20 @@ package com.usp.networks.screens;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.HashMap;
 
 public class MessageScreen extends Screen {
     private static final long serialVersionUID = 1L;
 
-    private JTextField recipientField;
     private JTextArea messageField;
     private JButton btnSend;
-    private JLabel messageToLabel;
-    private JLabel messageLabel;
-    private JButton btnExit;
-	private int IdUserSend;
-	private List<StringBuilder> list;
+	private String userSelect;
+	private HashMap<String, Integer> EmailId;
+	private int valorIdUser = -1;
 
     public MessageScreen() {
         super("Messages");
@@ -29,42 +26,49 @@ public class MessageScreen extends Screen {
     protected void addComponents() {
 
     	createLogoCenter(0, 0, 3);
+    	
+    	EmailId = new HashMap<String, Integer>();
 
-        btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
+        JButton btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
         this.ActionListinerBtn(btnExit, new AdmScreen());
         add(btnExit, getConstraints(0, 0, GridBagConstraints.WEST, 0, 0, 0, 0));
 
-        add(getMessageToLabel(), getConstraints(0, 1, GridBagConstraints.WEST, 20, 20, 0, 0));
-        add(getRecipientField(), getConstraints(1, 1, GridBagConstraints.CENTER, 20, 10, 0, 0));
+        JComboBox<String> userBox = createComboBox(1, 3, GridBagConstraints.CENTER, "Message to:");
 
-        add(getMessageLabel(), getConstraints(0, 2, GridBagConstraints.WEST, 20, 20, 0, 0));
+        add(new JLabel("Message:"), getConstraints(0, 2, GridBagConstraints.WEST, 20, 20, 0, 0));
 
         add(getMessageField(), getConstraints(1, 2, GridBagConstraints.CENTER, 20, 10, 0, 0));
 
-        add(getBtnSend(), getConstraints(0, 3, GridBagConstraints.CENTER, 20, 20, 0, 0));
-    }
-
-    private GridBagConstraints getConstraints(int gridx, int gridy, int anchor, int top, int left, int bottom, int right) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = gridx;
-        gbc.gridy = gridy;
-        gbc.anchor = anchor;
-        gbc.insets = new Insets(top, left, bottom, right);
-        return gbc;
-    }
-
-    public JTextField getRecipientField() {
-        if (recipientField == null) {
-            recipientField = new JTextField(15);
-            recipientField.setBorder(BorderFactory.createCompoundBorder(
-            		BorderFactory.createLineBorder(Color.GRAY),
-            		new EmptyBorder(4, 4, 4, 4)
-            ));
+        add(getBtnSend(), getConstraints(2, 3, GridBagConstraints.CENTER, 10, 10, 10, 10));
+        
+		String message = "\"LIST-USER\";";
+		List<StringBuilder> list = sendMessage(message);
+                
+        for (int i = 0; i < list.size(); i++) {
+        	String UserContent = list.get(i).toString().replace("\"", "");
+        	String[] splitUserContent = decode(UserContent);
+        	
+        	
+            String id = splitUserContent[0]; // ID do usuário
+            String email = splitUserContent[3]; // email
+            String admin = splitUserContent[5];
+        	
+            // Adicionar ao JComboBox e armazenar o ID
+            if(!Boolean.parseBoolean(admin)) {
+            	userBox.addItem(email);
+                EmailId.put(email, Integer.parseInt(id));
+            }
+            
         }
-        return recipientField;
+
+        userBox.addActionListener(e -> {
+            userSelect = (String) userBox.getSelectedItem();
+            valorIdUser = EmailId.get(userSelect);
+        });
     }
 
-    public JTextArea getMessageField() {
+
+    private JTextArea getMessageField() {
         if (messageField == null) {
             messageField = new JTextArea(3, 20);  // 3 linhas, 20 colunas
             messageField.setPreferredSize(new Dimension(250, 150)); 
@@ -79,25 +83,22 @@ public class MessageScreen extends Screen {
         return messageField;
     }
 
-    public JButton getBtnSend() {
+    private JButton getBtnSend() {
         if (btnSend == null) {
             btnSend = createIcon(25, 25, 1, 0, GridBagConstraints.EAST, "/icons/send-message.png");
             btnSend.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String recipient = getRecipientField().getText().trim();
                     String message = getMessageField().getText().trim();
 
-                    if (!recipient.isEmpty() && !message.isEmpty()) {
+                    if (!message.isEmpty()) {
         				//achar o Id do usuário
-                    	int idUser = getIdUser(recipient);
+                    	int idUser = valorIdUser;
                     	if(idUser != -1) {
-            				String msg = "\"SEND\";\""  + idUser + ";" + recipient + ";" + message + ":";
+            				String msg = "\"SEND\";\""  + userSelect + "\";\"" + Login.getLogin() + "\";\"" + message + "\":";
             				List<StringBuilder> listSend = sendMessage(msg);
             				
                     		if(listSend.get(0).toString().equals("\"Sent with sucess\"")) {
-	                            // limpa as caixas de texto
-	                            getRecipientField().setText("");
 	                            getMessageField().setText("");
                     		}
                     	}
@@ -108,53 +109,5 @@ public class MessageScreen extends Screen {
         return btnSend;
     }
       
-
-    public JLabel getMessageToLabel() {
-        if (messageToLabel == null) {
-            messageToLabel = new JLabel("Message to:");
-        }
-        return messageToLabel;
-    }
-
-    public JLabel getMessageLabel() {
-        if (messageLabel == null) {
-            messageLabel = new JLabel("Message:");
-        }
-        return messageLabel;
-    }
     
-    private int getIdUser(String user) {
-    	IdUserSend = -1;
-		String message = "LIST-USER:";
-		list = sendMessage(message);
-                
-        for (int i = 1; i < list.size(); i++) {
-        	StringBuilder UserContent = list.get(i);
-        	String eachUser = new String(UserContent);
-        	String[] splitUserContent = decodeUser(eachUser);
-        	
-            String id = splitUserContent[0]; // ID do usuário
-            String email = splitUserContent[1];
-            if(email.equals(user)) {
-            	IdUserSend = Integer.parseInt(id);
-            	break;
-            }
-    	
-        }
-        
-        return IdUserSend;
-        
-    }
-    
-	private String[] decodeUser(String user) {
-		String[] clean = user.split(user);
-		return clean;
-	}
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MessageScreen frame = new MessageScreen();
-            frame.showScreen();
-        });
-    }
 }

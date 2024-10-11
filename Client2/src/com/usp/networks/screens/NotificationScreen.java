@@ -1,143 +1,142 @@
 package com.usp.networks.screens;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.*;
-
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 
-public class NotificationScreen extends Screen{
-	
-	private static final long serialVersionUID = 1L;
-	private JButton btnExit;
-	private JButton btnDelete;
-	private JLabel notifys;
-	private JList<String> list;
-	private JPanel space;
-    private DefaultListModel<String> listModel;
-	
-	private String selectedItem;
-	private List<StringBuilder> listResponse;
-	
-	public NotificationScreen() {
-		super("Notifications");
-		addComponents();
-		
-	}
-	
-	protected void addComponents() {
-		
-        listModel = new DefaultListModel<>();
-        list = new JList<>(listModel);
+public class NotificationScreen extends Screen {
 
-		
-//		String msg = "\"LIST-NOTIFY\";" + Login.getIdUser() + "\":";
-        String msg = "\"LIST-NOTIFY\";" + Login.getIdUser() + "\":";
-		listResponse = sendMessage(msg);
-		
-        for (int i = 1; i < listResponse.size(); i++) {
-        	String notifyContent = listResponse.get(i).toString().replace("\"", "");
-        	String[] splitNotifyContent = decodeNotification(notifyContent);
-        	
-        	String id = splitNotifyContent[0]; //id
-            String sender = splitNotifyContent[1]; // sender
-            String message = splitNotifyContent[2]; // message
-          
-            listModel.addElement(id + " | " + "Sender: " + sender + "| Message: " + message);
-        }
-		
-		
-		
-		this.createLogoCenter(0,0, 3);
-        notifys = createLabel(1, 1, GridBagConstraints.SOUTH, "Notifications");
-        notifys.setFont(new Font("Arial", Font.PLAIN, 17));
+    private static final long serialVersionUID = 1L;
+    private String selectedItem;
+
+    public NotificationScreen() {
+        super("Notifications");
+        addComponents();
+    }
+
+    protected void addComponents() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        JList<String> list = new JList<>(listModel);
         
-		btnDelete = createIcon(40, 40, 4, 2, GridBagConstraints.EAST, "/icons/trash-bin.png");
-		btnDelete.addActionListener(new ActionListener() {
+        // Definir o renderizador personalizado
+        list.setCellRenderer(new CustomListCellRenderer());
+
+        // Define a altura fixa das células
+        list.setFixedCellHeight(20);
+
+        // Cria o JScrollPane e ajusta as políticas de rolagem
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        // Força a largura mínima do conteúdo da lista
+        list.setPrototypeCellValue("This is a very long text that ensures the horizontal scrollbar appears.");
+
+        // Adiciona o JScrollPane ao layout
+        add(scrollPane, getConstraints(1, 2, GridBagConstraints.CENTER, 20, 10, 0, 0));
+
+        String msg = "\"LIST-NOTIFY\";\"" + Login.getLogin() + "\";\"" + Login.getAdmin() + "\":";
+        List<StringBuilder> listResponse = sendMessage(msg);
+
+        if (listResponse == null) {
+            Screen back;
+            if (Login.getAdmin()) back = new AdmScreen();
+            else back = new XYScreen();
+            back.showScreen();
+        }
+
+        for (int i = 0; i < listResponse.size(); i++) {
+            String notifyContent = listResponse.get(i).toString().replace("\"", "");
+            String[] splitNotifyContent = decode(notifyContent);
+            String id = splitNotifyContent[0]; // id
+            String user = splitNotifyContent[1];
+            String sender = splitNotifyContent[2];
+            String message = splitNotifyContent[3]; // message
+            
+            if (Login.getAdmin()) {
+                listModel.addElement(id + " | Recipient: " + user + " | Message: " + message);
+            } else {
+                listModel.addElement(id + " | Sender: " + sender + " | Message: " + message);
+            }
+        }
+
+        this.createLogoCenter(0, 0, 3);
+        JLabel notifys = createLabel(1, 1, GridBagConstraints.SOUTH, "Notifications");
+        notifys.setFont(new Font("Arial", Font.PLAIN, 17));
+
+        JButton btnDelete = createIcon(40, 40, 4, 2, GridBagConstraints.EAST, "/icons/trash-bin.png");
+        btnDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Verifica se algum item está selecionado
                 int selectedIndex = list.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    // Remove o item do modelo (isso atualiza o JList automaticamente)
-            		String[] rs = selectedItem.split("\\|");
-            		for (int i = 0; i < rs.length; i++) {
-            			rs[i] = rs[i].trim();
-            		}
-        			String msgDel = "\"DELETE-NOTIFY\";\"" + rs[0] + "\":";
-            		List<StringBuilder> listMSG = sendMessage(msg);
-            		
-            		if(listMSG.get(0).toString().equals("\"Notification deleted with sucess\"")) {
+                    String[] rs = selectedItem.split("\\|");
+                    for (int i = 0; i < rs.length; i++) {
+                        rs[i] = rs[i].trim();
+                    }
+                    String msgDel = "\"DELETE-NOTIFY\";\"" + rs[0] + "\":";
+                    List<StringBuilder> listMSG = sendMessage(msgDel);
+
+                    if (listMSG.get(0).toString().equals("\"Notification deleted with sucess\"")) {
                         listModel.remove(selectedIndex);
-            		}
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Nenhum item selecionado para remover.", "Erro", JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "No items selected to remove", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-			
-		});
-		
-		
-		
-		btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
-		btnExit.addActionListener(e -> {
-			this.dispose();
-			AdmScreen admScreen = new AdmScreen();
-			admScreen.showScreen();
-		});
-        
-		        
-		
-	    // Adiciona espaçamento entre os itens
-	    list.setCellRenderer(new DefaultListCellRenderer() {
-	        @Override
-	        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-	            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-	            label.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7)); // Espaçamento entre os itens
-	            return label;
-	        }
-	    });
-	    
-	    // Captura o item selecionado
-	    list.addListSelectionListener(e -> {
-	        if (!e.getValueIsAdjusting()) {
-	            selectedItem = list.getSelectedValue();
-	        }
-	    });
-		
-//		list.setEnabled(false);
-		list.setPreferredSize(new Dimension(350, 110));
-		
-		JScrollPane scrollPane = new JScrollPane(list);
-		add(scrollPane, getConstraints(1, 2, GridBagConstraints.CENTER, 30, 0, 0, 20));
-		
-	}
-	
-    private GridBagConstraints getConstraints(int gridx, int gridy, int anchor, int top, int left, int bottom, int right) {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = gridx;
-        gbc.gridy = gridy;
-        gbc.anchor = anchor;
-        gbc.insets = new Insets(top, left, bottom, right);
-        return gbc;
-    }
-    
-	private String[] decodeNotification(String notify) {
-		String[] clean = notify.split(",");
-		return clean;
-	}
-	
-	
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Screen frame = new NotificationScreen(); 
-            frame.showScreen();
         });
+
+        JButton btnExit = createIcon(25, 25, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
+        btnExit.addActionListener(e -> {
+            this.dispose();
+            Screen back;
+            if (Login.getAdmin()) back = new AdmScreen();
+            else back = new XYScreen();
+            back.showScreen();
+        });
+
+        list.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                selectedItem = list.getSelectedValue();
+            }
+        });
+
+        // Define tamanho preferido da lista para garantir que a rolagem funcione
+        list.setPreferredSize(new Dimension(350, 110));
     }
-	
+
+    // Custom renderer para garantir que o conteúdo da célula não seja cortado
+    class CustomListCellRenderer extends JLabel implements ListCellRenderer<String> {
+        
+		private static final long serialVersionUID = 1L;
+
+		public CustomListCellRenderer() {
+            setOpaque(true);
+            setHorizontalAlignment(LEFT);
+            setVerticalAlignment(CENTER);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList<? extends String> list,
+                String value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus) {
+            setText(value);
+
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+
+            // Ajusta a largura da célula para forçar a barra horizontal
+            setPreferredSize(new Dimension(800, 20));
+            return this;
+        }
+    }
 }

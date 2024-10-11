@@ -1,17 +1,23 @@
 package com.usp.networks.screens;
 
 import javax.swing.*;
+
+import com.usp.networks.client.Admin;
+import com.usp.networks.client.Client;
+
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class Login extends Screen{
 	private static final long serialVersionUID = 1L;
 	private static int idUser;
+	private static String login;
+	private static boolean admin;
 	
 	private JTextField userField;
 	private JPasswordField passwordField;
-	private ArrayList<StringBuilder> list;
+	private List<StringBuilder> list;
 
 	public Login() {
 		super("Login");
@@ -27,11 +33,20 @@ public class Login extends Screen{
 		
 		JButton btnLogin = createButton(1, 4, GridBagConstraints.CENTER, "Enter");
 		btnLogin.addActionListener(e -> {
-			String message = "LOGIN;" + getUserField() + ";" + new String(getPasswordField()) + ":";
-			list = new ArrayList<>(sendMessage(message));
-			
-			if(checkResponse(list)) {
-				this.dispose();
+			if(!getUserField().isEmpty() && !(new String(getPasswordField()).isEmpty())) {
+				String message = "LOGIN;" + getUserField() + ";" + new String(getPasswordField()) + ":";
+				list = sendMessage(message);
+				if(checkResponse(list)) {
+					login = getUserField();
+					this.dispose();
+				}
+				else {
+					clearFields();
+					JOptionPane.showMessageDialog(null, list.getFirst().toString().replace("\"", "").trim(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Fill in the fields", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			
 		});
@@ -47,23 +62,27 @@ public class Login extends Screen{
 		return passwordField.getPassword();
 	}
 	
-    public static boolean checkResponse(ArrayList<StringBuilder> list) {
+	private void clearFields() {
+    	userField.setText("");
+    	passwordField.setText("");
+    }
+	
+    private boolean checkResponse(List<StringBuilder> list) {
         if (list != null) {
             for (StringBuilder sb : list) {
                 String[] value = sb.toString().split("\\|");
                 
                 String mensagemSemAspas = value[0].replace("\"", "").trim();
-                String valorBooleano = value[1].trim();
-                idUser = Integer.parseInt(value[2].trim());
                 
                 if (mensagemSemAspas.trim().equals("Connect with sucess")) {
-                	if(Boolean.parseBoolean(valorBooleano)) {
-                        AdmScreen admScreen = new AdmScreen();
-                        admScreen.showScreen();
+                	String valorBooleano = value[1].trim();
+                    admin = Boolean.parseBoolean(valorBooleano);
+                	idUser = Integer.parseInt(value[2].trim());
+                	if(admin) {
+                        Admin.getInstance().show();
                 	}
                 	else {
-                        XYScreen xyScreen = new XYScreen();
-                        xyScreen.showScreen();
+                        Client.getInstance().show();
                     }
                 	
                 	return true;
@@ -81,12 +100,13 @@ public class Login extends Screen{
     public static int getIdUser() {
     	return idUser;
     }
-	
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Login frame = new Login(); 
-            frame.showScreen();
-        });
-        
+    
+    public static String getLogin() {
+    	return login;
     }
+    
+    public static boolean getAdmin() {
+    	return admin;
+    }
+	
 }

@@ -7,15 +7,15 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import java.util.HashMap;
 
 
 public class UpdateUserScreen extends Screen{
 	private static final long serialVersionUID = 1L;
 	
 	private JTextField userField, fnameField, lnameField, passwordField;
-	private JComboBox<String> adminField;
     private Boolean isAdmin = true;
+    private HashMap<String, Integer> idUsers;
 
 	
 	public UpdateUserScreen() {
@@ -26,6 +26,8 @@ public class UpdateUserScreen extends Screen{
 	protected void addComponents() {
 		createLogoCenter(0, 0, 3);
 		JButton btnExit = this.createIcon(20, 20, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
+		
+		idUsers = new HashMap<>();
 		
 		btnExit.addActionListener(e -> {
 			this.dispose();
@@ -39,7 +41,7 @@ public class UpdateUserScreen extends Screen{
         lnameField = createTextField(1, 3, GridBagConstraints.WEST, "Last Name:");
         passwordField = createTextField(1, 4, GridBagConstraints.WEST, "Senha:");
         
-        adminField = createComboBox(1, 5, GridBagConstraints.WEST, "Admin:");
+        JComboBox<String> adminField = createComboBox(1, 5, GridBagConstraints.WEST, "Admin:");
         adminField.addItem("Yes");
         adminField.addItem("No");
         
@@ -52,24 +54,34 @@ public class UpdateUserScreen extends Screen{
              }
         });
         
+        String msgList = "\"LIST-USER\";";
+		List<StringBuilder>listResponse = sendMessage(msgList);
+      
+        for (int i = 0; i < listResponse.size(); i++) {
+        	String UserContent = listResponse.get(i).toString().replace("\"", "");
+        	String[] splitUserContent = decode(UserContent);
+        	
+        	
+            String id = splitUserContent[0]; // ID do usuári
+            String email = splitUserContent[3]; // email
+            
+            idUsers.put(email, Integer.parseInt(id));	
+        }
+        
 		JButton btnUpdate = this.createButton(1, 6, GridBagConstraints.CENTER, "Update User");
 		
 		btnUpdate.addActionListener(e -> {
-			if(!getUser().isEmpty() && !getPassword().isEmpty() && getFname().isEmpty() && getLname().isEmpty()) {
-					String message = "\"UPDATE-USER\";\"" + getFname() + "\";\"" + getLname() + "\";\"" + getUser() + "\";\"" + getPassword() + "\";\"" + isAdmin +"\":";
+			if(!getUser().isEmpty() && !getPassword().isEmpty() && !getFname().isEmpty() && !getLname().isEmpty()) {
+					String message = "\"UPDATE-USER\";\"" + idUsers.get(getUser()) + "\";\"" + getFname() + "\";\"" + getLname() + "\";\"" + getUser() + "\";\"" + getPassword() + "\";\"" + isAdmin +"\":";
 					List<StringBuilder> list = sendMessage(message);
-					if(!list.get(0).toString().equals("\"User updated with sucess\"")) {
-						showErrorPopup("Não foi possível atualizar o usuário!");
-						clearFields();
+					if(list.get(0).toString().equals("\"User updated with sucess\"")) {
+						JOptionPane.showMessageDialog(null, "User updated with sucess", "OK", JOptionPane.INFORMATION_MESSAGE);
 					}
 					else {
-						this.dispose();
-						AdmScreen admScreen = new AdmScreen();
-						admScreen.showScreen();
+						JOptionPane.showMessageDialog(null, "Unable to update", "Error", JOptionPane.ERROR_MESSAGE);
 					}
-				} else {
-					clearFields();
-				}
+				} 
+			clearFields();
 				
 		});
 	}
@@ -97,15 +109,5 @@ public class UpdateUserScreen extends Screen{
         lnameField.setText("");
         passwordField.setText("");
     }
-	
-    private static void showErrorPopup(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Screen frame = new UpdateUserScreen(); 
-            frame.showScreen();
-        });
-    }
+	    
 }

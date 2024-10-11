@@ -1,8 +1,7 @@
 package com.usp.networks.screens;
 
 import java.awt.GridBagConstraints;
-
-
+import java.util.List;
 import javax.swing.*;
 
 public class XYScreen extends Screen{
@@ -10,7 +9,6 @@ public class XYScreen extends Screen{
 	private static final long serialVersionUID = 1L;
 	private JTextField latitudeField;
 	private JTextField longitudeField;
-	private JButton btnSend;
 	
 	public XYScreen() {
 		super("User");
@@ -32,12 +30,21 @@ public class XYScreen extends Screen{
 		latitudeField = this.createTextField(1, 1, GridBagConstraints.WEST, "Latitude:");
 		longitudeField = this.createTextField(1, 2, GridBagConstraints.WEST, "Longitude:");
 		
-		btnSend = this.createButton(1, 3, GridBagConstraints.WEST, "Send Position");
+		JButton btnSend = this.createButton(1, 3, GridBagConstraints.WEST, "Send Position");
 		btnSend.addActionListener(e -> {
 			if(!getLatitude().isEmpty() && !getLongitude().isEmpty()) {
-				String msgXY = "XY;" + Login.getIdUser() + ";" + getLatitude() + ";" + getLongitude() + ":";
-				sendMessage(msgXY);
+				String msgXY = "XY;" + Login.getLogin() + ";" + getLatitude() + ";" + getLongitude() + ":";
+				List<StringBuilder> response = sendMessage(msgXY);
+				if(response.getFirst().toString().replace("\"", "").trim().equals("Successfully verified")) {
+					JOptionPane.showMessageDialog(null, "Sent successfully", "Success", JOptionPane.OK_OPTION);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Unable to send", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				clearFields();
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Fill in the fields correctly", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		
@@ -57,10 +64,4 @@ public class XYScreen extends Screen{
 		return longitudeField.getText().trim();
 	}
 	
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Screen frame = new XYScreen(); 
-            frame.showScreen();
-        });
-    }
 }

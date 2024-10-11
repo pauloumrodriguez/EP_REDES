@@ -24,7 +24,7 @@ public class UpdatePasswordHandler implements Handler {
 							return msg;
 						}
 						msg.append("\"Unable updated\":");
-						System.out.println("Updated with sucess");
+						System.out.println("Unable updated");
 						return msg;
 					}
 					else {

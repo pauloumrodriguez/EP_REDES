@@ -24,7 +24,7 @@ public class UpdateUserHandler implements Handler{
 	    	return msgException;
 		}
 		Boolean flag = db.executeSQL("UPDATE Users SET fname = '"+ p[2] +"',lname = '" + p[3] +
-				"', login = '" + p[4] + "', password = '" + p[5] + "', admin = "+ p[6] + " WHERE id = " + p[1] +";");
+				"', password = '" + p[5] + "', admin = "+ p[6] + " WHERE id = " + p[1] +";");
 		if(flag) {
 			msg.append("\"User updated with sucess\":");
 			System.out.println("User updated with sucess");

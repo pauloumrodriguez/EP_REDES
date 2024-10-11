@@ -6,25 +6,15 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.SwingUtilities;
+import javax.swing.JOptionPane;
 
 public class AssociationScreen extends Screen{
 	private static final long serialVersionUID = 1L;
 
-	private JButton btnExit;
-	private JButton btnSino;
-	private JButton btnAssociate;
-	private JButton btnDesassociate;
-	
-	private JComboBox<String> userBox;
-	private JComboBox<String> zoneBox;
 	
 	private String userSelect;
 	private String zoneSelect;
-	private List<StringBuilder> list;
-	private List<StringBuilder> list2;
 	private HashMap<String, Integer> EmailId; 
-	
 	private int valorIdUser;
 
 
@@ -39,36 +29,34 @@ public class AssociationScreen extends Screen{
 		
 		createLogoCenter(0, 0, 3);
 		
-		btnExit = createIcon(28, 28, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
+		JButton btnExit = createIcon(28, 28, 0, 0, GridBagConstraints.WEST, "/icons/seta-left-icon.png");
 		this.ActionListinerBtn(btnExit, new AdmScreen());
 
-		btnSino = createIcon(25, 25, 2, 0, GridBagConstraints.NORTHEAST, "/icons/sino-png.png");
-		btnSino.addActionListener(e -> {
-			this.dispose();
-			NotificationScreen notificationScreen = new NotificationScreen();
-			notificationScreen.showScreen();
-		});
-		
 		
 //		String[] opcoes = {"User 10", "User 11", "User 12", "User 13"};
-        userBox = createComboBox(1, 3, GridBagConstraints.CENTER, "User ID");
+        JComboBox<String> userBox = createComboBox(1, 3, GridBagConstraints.CENTER, "User ID");
         
 		String message = "\"LIST-USER\";";
-		list = sendMessage(message);
+		List<StringBuilder> list = sendMessage(message);
                 
-        for (int i = 1; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
         	String UserContent = list.get(i).toString().replace("\"", "");
-        	String[] splitUserContent = decodeUser(UserContent);
+        	String[] splitUserContent = decode(UserContent);
+        	
         	
         	
             String id = splitUserContent[0]; // ID do usuário
             String email = splitUserContent[3]; // email
-        	
-            // Adicionar ao JComboBox e armazenar o ID
-            userBox.addItem(email);
-            EmailId.put(email, Integer.parseInt(id));
+            String admin = splitUserContent[5];
             
+         // Adicionar ao JComboBox e armazenar o ID
+            if(!Boolean.parseBoolean(admin)) {
+            	userBox.addItem(email);
+                EmailId.put(email, Integer.parseInt(id));
+            }
+        	
         }
+        
 
         userBox.addActionListener(e -> {
             userSelect = (String) userBox.getSelectedItem();
@@ -77,14 +65,14 @@ public class AssociationScreen extends Screen{
 		
         
 //        String[] opcoes2 = {"Zona 1", "Zona 2", "Zona 3", "Zona 4"};
-        zoneBox = createComboBox(1, 4, GridBagConstraints.CENTER, "Zone ID");
+        JComboBox<String> zoneBox = createComboBox(1, 4, GridBagConstraints.CENTER, "Zone ID");
 
 		String message2 = "\"LIST-ZONE\";";
-		list2 = sendMessage(message2);
+		list = sendMessage(message2);
                 
-        for (int i = 1; i < list2.size(); i++) {
-        	String ZoneContent = list2.get(i).toString().replace("\"", "");
-        	String[] splitZoneContent = decodeUser(ZoneContent);
+        for (int i = 0; i < list.size(); i++) {
+        	String ZoneContent = list.get(i).toString().replace("\"", "");
+        	String[] splitZoneContent = decode(ZoneContent);
         	
             String id = splitZoneContent[0]; // ID da zona
 
@@ -97,45 +85,34 @@ public class AssociationScreen extends Screen{
         });
 	
 		
-		btnAssociate = createButton(1, 6, GridBagConstraints.CENTER, "Desassociate");		
+		JButton btnAssociate = createButton(1, 6, GridBagConstraints.CENTER, "Associate");		
 		btnAssociate.addActionListener(e -> {
 			if(zoneSelect != null  && userSelect != null) {
 				String msg = "\"CREATE-ASS\";\"" + valorIdUser + "\";\"" + zoneSelect + "\":";
 				List<StringBuilder> listAss= sendMessage(msg);
 				
-				if(listAss.get(0).toString().equals("\"Association Zone-User created with success\"")) {
-					this.dispose(); 
-					AdmScreen admScreen = new AdmScreen();
-					admScreen.showScreen();
+				if(listAss.get(0).toString().equals("\"Association Zone-User created with sucess\"")) {
+					JOptionPane.showMessageDialog(null, "Association Zone-User created with success", "OK", JOptionPane.INFORMATION_MESSAGE);
         		}
+				else {
+					JOptionPane.showMessageDialog(null, "Unable to register zone-user", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
-		btnDesassociate = createButton(1, 5, GridBagConstraints.CENTER, "Associate");		
+		JButton btnDesassociate = createButton(1, 5, GridBagConstraints.CENTER, "Desassociate");		
 		btnDesassociate.addActionListener(e -> {
 			if(zoneSelect != null  && userSelect != null) {
 				String msg = "\"DELETE-ASS\";\"" + valorIdUser + "\";\"" + zoneSelect + "\":";
 				List<StringBuilder> listAss= sendMessage(msg);
 				
-				if(listAss.get(0).toString().equals("\"Association Zone-User deleted with success\"")) {
-					this.dispose(); 
-					AdmScreen admScreen = new AdmScreen();
-					admScreen.showScreen();
-        		}
+				if(listAss.get(0).toString().equals("\"Association Zone-User deleted with sucess\"")) {
+					JOptionPane.showMessageDialog(null, "Association Zone-User deleted with success", "OK", JOptionPane.INFORMATION_MESSAGE);
+        		}else {
+					JOptionPane.showMessageDialog(null, "Unable to delete zone-user", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 	}
 	
-	private String[] decodeUser(String user) {
-		String[] clean = user.split(",");
-		return clean;
-	}
-
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			AssociationScreen frame = new AssociationScreen();
-			frame.showScreen();
-		});
-	}
 }

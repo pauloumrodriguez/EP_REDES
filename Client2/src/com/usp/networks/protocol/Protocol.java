@@ -15,7 +15,6 @@ public class Protocol {
 	private void initMap() {
 		cmds.put("MSG", new MessageHandler());
 		cmds.put("PACK", new PackHandler());
-		cmds.put("NOTIFY", new NotifyHandler());
 	}
 	
 	public static Protocol getInstance(){

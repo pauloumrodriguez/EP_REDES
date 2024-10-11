@@ -40,7 +40,7 @@ public class ForgotKeyScreen extends Screen {
 				new String(this.getConfirmField()) + "\":";
 					List<StringBuilder> list = sendMessage(message);
 					if(!list.get(0).toString().equals("\"Updated with sucess\"")) {
-						showErrorPopup("Não foi possível atualizar cadastro!");
+						JOptionPane.showMessageDialog(null, list.getFirst().toString().replace("\"", "").trim(), "Error", JOptionPane.ERROR_MESSAGE);
 						clearFields();
 					}
 					else {
@@ -50,6 +50,7 @@ public class ForgotKeyScreen extends Screen {
 					}
 				} else {
 					clearFields();
+					JOptionPane.showMessageDialog(null, "Enter the same password in the fields");
 				}
 				
 			}
@@ -74,14 +75,4 @@ public class ForgotKeyScreen extends Screen {
     	confirmField.setText("");
     }
 	
-    private static void showErrorPopup(String message) {
-        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-	public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Screen frame = new ForgotKeyScreen(); 
-            frame.showScreen();
-        });
-    }
 }
