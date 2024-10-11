@@ -49,6 +49,9 @@ public class NotificationScreen extends Screen {
         for (int i = 0; i < listResponse.size(); i++) {
             String notifyContent = listResponse.get(i).toString().replace("\"", "");
             String[] splitNotifyContent = decode(notifyContent);
+            for(int j = 0; j < splitNotifyContent.length; j++) {
+            	splitNotifyContent[j].replace("\"", "");
+            }
             String id = splitNotifyContent[0]; //id
             String user = splitNotifyContent[1]; //user
             String sender = splitNotifyContent[2]; //sender

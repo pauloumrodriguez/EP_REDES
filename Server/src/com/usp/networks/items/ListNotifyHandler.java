@@ -14,7 +14,7 @@ public class ListNotifyHandler implements Handler {
 		StringBuilder msg = new StringBuilder("PACK;");
 		try {
 			while(rs.getResultSet().next()) {
-				String a = "\"" + rs.getResultSet().getInt("id") + ","+ rs.getResultSet().getString("user_id") + "," + rs.getResultSet().getString("sender") + "," + rs.getResultSet().getString("message") + "\"";
+				String a = "\"\"" + rs.getResultSet().getInt("id") + "\",\""+ rs.getResultSet().getString("user_id") + "\",\"" + rs.getResultSet().getString("sender") + "\",\"" + rs.getResultSet().getString("message") + "\"\"";
 				msg.append(a + ";"); // Gera o registro da notificação e insere na lista
 			}
 			rs.close();
