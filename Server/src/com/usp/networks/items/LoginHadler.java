@@ -15,8 +15,8 @@ public class LoginHadler implements Handler{
 			else {
 				String password = rs.getResultSet().getString("password");
 				if(password.compareTo(p[2]) == 0) { //Verifica se a senha está correta
-					msg.append("\"Connect with sucess\"|" + rs.getResultSet().getBoolean("admin") + "|" + rs.getResultSet().getInt("id") + "|:");
-					System.out.println("Connect with sucess"); //Permite a conexão
+					msg.append("\"Connect with success\"|" + rs.getResultSet().getBoolean("admin") + "|" + rs.getResultSet().getInt("id") + "|:");
+					System.out.println("Connect with success"); //Permite a conexão
 				}
 				else {
 					msg.append("\"Incorrect password\":"); //Senha incorreta
