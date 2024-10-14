@@ -198,7 +198,8 @@ public abstract class Screen extends JFrame {
 	protected List<StringBuilder> sendMessage(String message) { //Envia mensagem para o servidor
 		try {
 			String IpServer = null;
-			try(BufferedReader br = new BufferedReader(new FileReader("src/com/usp/networks/screens/IpServer.txt"))){
+			String Path = new File("../Client2/src/com/usp/networks/screens/IpServer.txt").getAbsolutePath();
+			try(BufferedReader br = new BufferedReader(new FileReader(Path))){
 				IpServer = br.readLine();
 				if(IpServer == null) {
 					JOptionPane.showMessageDialog(null, "There is no server address", "Error", JOptionPane.ERROR_MESSAGE);

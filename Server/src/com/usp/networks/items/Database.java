@@ -1,13 +1,15 @@
 package com.usp.networks.items;
 
 import java.sql.*;
+import java.io.File;
 
 public class Database {
 	private String url;
 	private static Database db;
 	
 	private Database() {
-		url = "jdbc:sqlite:src/com/usp/networks/server/myDB.db"; //Banco de dados SQLite3
+		String dbPath = new File("../Server/src/com/usp/networks/server/myDB.db").getAbsolutePath();
+		url = "jdbc:sqlite:" + dbPath; //Banco de dados SQLite3
 	}
 	
 	public static Database getDB() { //Design Patterns Singleton
