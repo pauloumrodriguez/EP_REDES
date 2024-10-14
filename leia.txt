@@ -1,0 +1,7 @@
+Execute os executáveis somente na pasta exe
+Criamos dois usuários para tu testar o programa:
+prof_admin@usp.br
+12345
+prof_client@usp.br
+12345
+Altere o arquivo IpServer.txt que está na pasta Client2/src/com/usp/networks/screens com o endereço Ip onde será executado o MyServer
